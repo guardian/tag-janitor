@@ -5,6 +5,8 @@ import {
   RequestedChannel,
 } from "@guardian/anghammarad";
 import { Accounts, PrismInstancesResponse } from "./interfaces";
+
+// TODO: Is this okay for prod too?
 require("dotenv").config();
 
 const getTopicArn = (): string => {
@@ -35,7 +37,8 @@ export const handler = async () => {
 
   const anghammarad = new Anghammarad();
 
-  for (const accountNumber of Object.keys(accounts)) {
+  const pAndEAccounts = process.env.ACCOUNTS_ALLOW_LIST?.split(",")
+  for (const accountNumber of Object.keys(accounts).filter(accountNumber => pAndEAccounts?.includes(accountNumber))) {
     const instances = accounts[accountNumber];
     const { accountName } = instances[0].meta.origin;
     const instancesListString = instances
