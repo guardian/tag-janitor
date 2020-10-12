@@ -7,7 +7,7 @@
     "start": "ts-node src/handler.ts",
     "lint": "eslint",
     "compile": "tsc",
-    "riffraff": "yarn compile && node-riffraff-artifact"
+    "riffraff": "node-riffraff-artifact"
   },
   "keywords": [],
   "author": "",

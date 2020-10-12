@@ -25,6 +25,6 @@ echo "##teamcity[blockOpened name='generate-cfn']"
 echo "##teamcity[blockClosed name='generate-cfn']"
 
 echo "##teamcity[compilationStarted compiler='riffraff']"
-yarn riffraff # calls node-riffraff-artifact
+npx node-riffraff-artifact
 echo "##teamcity[compilationFinished compiler='riffraff']"
 
