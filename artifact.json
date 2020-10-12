@@ -1,0 +1,16 @@
+{
+  "projectName": "Deploy Tools::Tag Janitor",
+  "vcsURL": "https://github.com/guardian/tag-janitor",
+  "actions": [
+    {
+      "action": "tag-janitor",
+      "path": "./",
+      "compress": "zip"
+    },
+    {
+      "action": "cloudformation",
+      "path": "cloudformation/cdk/CdkStack.template.json",
+      "compress": false
+    }
+  ]
+}

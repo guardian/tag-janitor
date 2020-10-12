@@ -1,0 +1,19 @@
+regions: [eu-west-1]
+stacks: [deploy]
+deployments:
+  tag-janitor:
+    type: aws-lambda
+    dependencies: [cloudformation]
+    parameters:
+      prefixStack: false
+      bucket: tag-janitor
+      fileName: tag-janitor.zip
+      functionNames: [tag-janitor-]
+  cloudformation:
+    type: cloud-formation
+    app: tag-janitor
+    parameters:
+      prependStackToCloudFormationStackName: false
+      cloudFormationStackName: tag-janitor
+      templatePath: CdkStack.template.json
+      cloudFormationStackByTags: false
