@@ -1,8 +1,8 @@
 import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
-import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
-import * as ec2 from "@aws-cdk/aws-ec2";
+import * as s3 from "@aws-cdk/aws-s3";
+import { Subnet, Vpc } from "@aws-cdk/aws-ec2";
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -30,10 +30,16 @@ export class CdkStack extends cdk.Stack {
       description: "The ARN of the SNS topic to send messages to",
     });
 
-    const vpcParameter = new cdk.CfnParameter(this, "topicArn", {
+    const vpcParameter = new cdk.CfnParameter(this, "vpcId", {
       type: "AWS::EC2::VPC::Id",
       description:
-        "The VPC for the lambda to live in (this allows it to talk to Prism)",
+        "The VPC ID for the lambda to live in (this allows it to talk to Prism)",
+    });
+
+    const subnetsParameter = new cdk.CfnParameter(this, "subnetIds", {
+      type: "List<AWS::EC2::Subnet::Id>",
+      description:
+        "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
     });
 
     const accountsAllowListParameter = new cdk.CfnParameter(
@@ -56,8 +62,11 @@ export class CdkStack extends cdk.Stack {
       bucketName.valueAsString
     );
 
+    const subnets = subnetsParameter.valueAsList.map((subnetId) =>
+      Subnet.fromSubnetId(this, `subnet-${subnetId}`, subnetId)
+    );
+
     const tagJanitorLambda = new lambda.Function(this, `${app}-lambda`, {
-      functionName: `${app}-${stageParameter.valueAsString}`,
       handler: "dist/handler.handler",
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromBucket(
@@ -70,12 +79,16 @@ export class CdkStack extends cdk.Stack {
         ACCOUNTS_ALLOW_LIST: accountsAllowListParameter.valueAsString,
         PRISM_URL: prismUrl.valueAsString,
       },
-      description: "Lambda to notify about invalid instances",
-      timeout: cdk.Duration.minutes(3),
+      description: "Lambda to notify about instances with missing tags",
+      timeout: cdk.Duration.seconds(30),
       memorySize: 512,
-      vpc: ec2.Vpc.fromVpcAttributes(this, "vpc", {
+      vpc: Vpc.fromVpcAttributes(this, "vpc", {
         vpcId: vpcParameter.valueAsString,
+        availabilityZones: this.availabilityZones,
       }),
+      vpcSubnets: {
+        subnets: subnets,
+      },
     });
 
     const snsPolicyStatment = new iam.PolicyStatement();

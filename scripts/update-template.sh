@@ -6,7 +6,7 @@ STAGE=$1
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 ROOT_DIR="${DIR}/.."
 TEMPLATE="${ROOT_DIR}/cloudformation/cdk/CdkStack.template.json"
-PROFILE="media-service"
+PROFILE="deployTools"
 
 
 if [[ -z "${STAGE}" ]]; then
