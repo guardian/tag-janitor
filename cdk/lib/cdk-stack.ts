@@ -66,8 +66,14 @@ export class CdkStack extends cdk.Stack {
       Subnet.fromSubnetId(this, `subnet-${subnetId}`, subnetId)
     );
 
+    const vpc = Vpc.fromVpcAttributes(this, "vpc", {
+      vpcId: vpcParameter.valueAsString,
+      availabilityZones: this.availabilityZones,
+    });
+
     const tagJanitorLambda = new lambda.Function(this, `${app}-lambda`, {
       handler: "dist/handler.handler",
+      functionName: `${app}-${stageParameter.valueAsString}`,
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromBucket(
         deployBucket,
@@ -82,10 +88,7 @@ export class CdkStack extends cdk.Stack {
       description: "Lambda to notify about instances with missing tags",
       timeout: cdk.Duration.seconds(30),
       memorySize: 512,
-      vpc: Vpc.fromVpcAttributes(this, "vpc", {
-        vpcId: vpcParameter.valueAsString,
-        availabilityZones: this.availabilityZones,
-      }),
+      vpc: vpc,
       vpcSubnets: {
         subnets: subnets,
       },
