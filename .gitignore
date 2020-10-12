@@ -1,7 +1,13 @@
 .idea
+
+# Lambda
 node_modules/
 yarn-error.log
 .env
 package-lock.json
+dist
+
+# CDK
 cloudformation/cdk
 cdk.out
+
