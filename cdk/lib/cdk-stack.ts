@@ -64,7 +64,7 @@ export class CdkStack extends cdk.Stack {
         PRISM_URL: prismUrl.valueAsString,
       },
       description: "Lambda to notify about invalid instances",
-      timeout: cdk.Duration.minutes(1),
+      timeout: cdk.Duration.minutes(3),
       memorySize: 512,
     });
 
