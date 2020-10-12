@@ -51,7 +51,7 @@ export class CdkStack extends cdk.Stack {
 
     const tagJanitorLambda = new lambda.Function(this, `${app}-lambda`, {
       functionName: `${app}-${stageParameter.valueAsString}`,
-      handler: "dist/src/handler.handler",
+      handler: "dist/handler.handler",
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromBucket(
         deployBucket,
