@@ -6,7 +6,7 @@ deployments:
     dependencies: [cloudformation]
     parameters:
       prefixStack: false
-      bucket: tag-janitor
+      bucket: deploy-tools-dist
       fileName: tag-janitor.zip
       functionNames: [tag-janitor-]
   cloudformation:
