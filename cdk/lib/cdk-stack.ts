@@ -2,6 +2,7 @@ import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
+import * as ec2 from "@aws-cdk/aws-ec2";
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -27,6 +28,12 @@ export class CdkStack extends cdk.Stack {
     const topicParameter = new cdk.CfnParameter(this, "topicArn", {
       type: "String",
       description: "The ARN of the SNS topic to send messages to",
+    });
+
+    const vpcParameter = new cdk.CfnParameter(this, "topicArn", {
+      type: "AWS::EC2::VPC::Id",
+      description:
+        "The VPC for the lambda to live in (this allows it to talk to Prism)",
     });
 
     const accountsAllowListParameter = new cdk.CfnParameter(
@@ -66,6 +73,9 @@ export class CdkStack extends cdk.Stack {
       description: "Lambda to notify about invalid instances",
       timeout: cdk.Duration.minutes(3),
       memorySize: 512,
+      vpc: ec2.Vpc.fromVpcAttributes(this, "vpc", {
+        vpcId: vpcParameter.valueAsString,
+      }),
     });
 
     const snsPolicyStatment = new iam.PolicyStatement();
