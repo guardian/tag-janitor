@@ -4,9 +4,8 @@ import {
   NotifyParams,
   RequestedChannel,
 } from "@guardian/anghammarad";
-import { Accounts, PrismInstancesResponse } from "./interfaces";
+import { Accounts, Instance, PrismInstancesResponse } from "./interfaces";
 
-// TODO: Is this okay for prod too?
 require("dotenv").config();
 
 const getTopicArn = (): string => {
@@ -17,62 +16,130 @@ const getTopicArn = (): string => {
   return arn;
 };
 
-export const handler = async () => {
-  const response = await axios.get(`https://prism.gutools.co.uk/instances`);
+function createNotifyParams({
+  accountName,
+  message,
+  accountNumber,
+  topicArn,
+}: {
+  accountName: string;
+  message: string;
+  accountNumber: string;
+  topicArn;
+}) {
+  return {
+    subject: `AWS account ${accountName} has instances with missing tags`,
+    message: message,
+    target: { Stack: "testing-node-client" }, // TODO: Change this to {AwsAccount: accountNumber}
+    channel: RequestedChannel.HangoutsChat,
+    topicArn: topicArn,
+    sourceSystem: "tag-janitor",
+    actions: [],
+  };
+}
 
-  const data: PrismInstancesResponse = response.data;
-  const { instances } = data.data;
-  const missingTagInstances = instances.filter(
+async function getInstancesWithMissingTags(): Promise<Instance[]> {
+  const prismResponse = await axios.get(`${process.env.PRISM_URL}/instances`);
+  const data: PrismInstancesResponse = prismResponse.data;
+  return data.data.instances.filter(
     (i) => !i.tags["Stack"] || !i.tags["Stage"] || !i.tags["App"]
   );
+}
 
+function groupInstancesWithAccounts({
+  instancesWithMissingTags,
+  pAndEAccounts,
+}: {
+  instancesWithMissingTags: Instance[];
+  pAndEAccounts?: string[];
+}): Accounts {
   const accounts: Accounts = {};
-  missingTagInstances.forEach((i) => {
-    const { accountNumber } = i.meta.origin;
-    accounts[accountNumber]
-      ? accounts[accountNumber].push(i)
-      : (accounts[accountNumber] = [i]);
-  });
-  console.log(`Found ${Object.keys(accounts)} accounts`);
+  instancesWithMissingTags
+    .filter((instance) =>
+      pAndEAccounts?.includes(instance.meta.origin.accountNumber)
+    )
+    .forEach((instance) => {
+      const { accountNumber } = instance.meta.origin;
+      accounts[accountNumber]
+        ? accounts[accountNumber].push(instance)
+        : (accounts[accountNumber] = [instance]);
+    });
+  return accounts;
+}
 
-  const anghammarad = new Anghammarad();
+function getFormattedInstanceList(instances: Instance[]) {
+  return instances
+    .map((instance) => {
+      const missingTags = ["App", "Stack", "Stage"]
+        .filter((tag) => !instance.tags[tag])
+        .join(", ");
+      const s = missingTags.length > 1 ? "(s)" : "";
+      return `* **[${instance.instanceName}](${instance.meta.href})** is missing tag${s} **${missingTags}**`;
+    })
+    .join("\n");
+}
 
-  const pAndEAccounts = process.env.ACCOUNTS_ALLOW_LIST?.split(",")
-  for (const accountNumber of Object.keys(accounts).filter(accountNumber => pAndEAccounts?.includes(accountNumber))) {
-    const instances = accounts[accountNumber];
-    const { accountName } = instances[0].meta.origin;
-    const instancesListString = instances
-      .map((instance) => {
-        const missingTags = ["App", "Stack", "Stage"]
-          .filter((tag) => !instance.tags[tag])
-          .join(", ");
-        const s = missingTags.length > 1 ? "(s)" : "";
-        return `* **[${instance.instanceName}](${instance.meta.href})** is missing tag${s} **${missingTags}**`;
-      })
-      .join("\n");
-
-    const message = `Hello,
+function generateMessagae({
+  accountName,
+  accountNumber,
+  instances,
+  formattedInstanceList,
+}: {
+  accountNumber: string;
+  accountName: string;
+  instances: Instance[];
+  formattedInstanceList: string;
+}): string {
+  return `Hello,
   
 The AWS account ${accountNumber} (**${accountName}**) has ${instances.length} instances missing either Stack, Stage or App tags:
 
-${instancesListString}
+${formattedInstanceList}
 
 Please update your instances or Cloudformation to include the required tags.
 `;
+}
 
-    const params: NotifyParams = {
-      subject: `AWS account ${accountName} has instances with missing tags`,
-      message: message,
-      target: { Stack: "testing-node-client" },
-      channel: RequestedChannel.HangoutsChat,
-      topicArn: getTopicArn(),
-      sourceSystem: "tag-janitor",
-      actions: [],
-    };
+export const handler = async () => {
+  const anghammarad = new Anghammarad();
+  const topicArn = getTopicArn();
+  const pAndEAccounts = process.env.ACCOUNTS_ALLOW_LIST?.split(",");
 
-    console.log("params sent to anghamarrad", params);
+  const instancesWithMissingTags = await getInstancesWithMissingTags();
+  const accounts: Accounts = groupInstancesWithAccounts({
+    instancesWithMissingTags,
+    pAndEAccounts,
+  });
+
+  console.log(
+    `Found ${
+      Object.keys(accounts).length
+    } allowed accounts with invalid instances:\n${Object.keys(accounts).join(
+      ", "
+    )}`
+  );
+
+  for (const accountNumber of Object.keys(accounts)) {
+    const instances = accounts[accountNumber];
+    const { accountName } = instances[0].meta.origin;
+    const formattedInstanceList = getFormattedInstanceList(instances);
+    const message = generateMessagae({
+      accountNumber,
+      accountName,
+      instances,
+      formattedInstanceList,
+    });
+
+    const params: NotifyParams = createNotifyParams({
+      accountName,
+      message,
+      topicArn,
+      accountNumber,
+    });
+
+    console.log("Notifying Anghamarrad with params", params);
     const angRes = await anghammarad.notify(params);
-    console.log("anghammarad response", angRes);
+    console.log("Anghammarad response", angRes);
   }
 };
 
