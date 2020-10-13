@@ -1,0 +1,39 @@
+= Tag Janitor
+
+== What is it
+
+Many of the Guardian's applications identify and interact with each other through looking up these three sets of tags:
+
+ - Stack
+ - Stage
+ - App
+
+This application:
+
+ 1. Queries https://github.com/guardian/prism[Prism] for instances
+ 2. Checks which ones are missing the required tags
+ 3. Notifies the relevant owners of those instances via https://github.com/guardian/anghammarad[Anghammarad]
+
+== How to run locally
+
+If you want to run this locally, you will need to:
+
+ 1. Set up your environment by creating a `.env` file in the root of your directory.
+ 2. Ensure you have correct credentials for the AWS account that Anghammarad lives in
+
+Then, install the dependencies and run the code:
+
+[source,bash]
+----
+$ cd lambda
+$ yarn # install dependencies
+$ yarn start # runs the handler locally
+----
+
+Or, run `scripts/start.sh` to do this for you!
+
+== How to deploy
+
+Deploy this app through TeamCity and RiffRaff. See what CI is doing in `scripts/ci.sh`
+
+To generate the Cloudformation to create a stack, you can run `scripts/generate-cfn.sh`
