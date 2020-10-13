@@ -34,13 +34,13 @@ export class CdkStack extends cdk.Stack {
       type: "AWS::EC2::VPC::Id",
       description:
         "The VPC ID for the lambda to live in (this allows it to talk to Prism)",
-    });
+    }); // TODO: Look this up in SSM https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-ssm-parameter-types
 
     const subnetsParameter = new cdk.CfnParameter(this, "subnetIds", {
       type: "List<AWS::EC2::Subnet::Id>",
       description:
         "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
-    });
+    }); // TODO: Look this up in SSM https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-ssm-parameter-types
 
     const accountsAllowListParameter = new cdk.CfnParameter(
       this,
