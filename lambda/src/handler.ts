@@ -30,8 +30,8 @@ function createNotifyParams({
   return {
     subject: `AWS account ${accountName} has instances with missing tags`,
     message: message,
-    target: { Stack: "testing-node-client" }, // TODO: Change this to {AwsAccount: accountNumber}
-    channel: RequestedChannel.HangoutsChat,
+    target: { Stack: "testing-node-client" }, // TODO: Change this to `{ AwsAccount: accountNumber }` to make live
+    channel: RequestedChannel.Email,
     topicArn: topicArn,
     sourceSystem: "tag-janitor",
     actions: [],
@@ -79,7 +79,7 @@ function getFormattedInstanceList(instances: Instance[]) {
     .join("\n");
 }
 
-function generateMessagae({
+function generateMessage({
   accountName,
   accountNumber,
   instances,
@@ -123,7 +123,7 @@ export const handler = async () => {
     const instances = accounts[accountNumber];
     const { accountName } = instances[0].meta.origin;
     const formattedInstanceList = getFormattedInstanceList(instances);
-    const message = generateMessagae({
+    const message = generateMessage({
       accountNumber,
       accountName,
       instances,
