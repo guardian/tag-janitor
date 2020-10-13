@@ -2,6 +2,8 @@ import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as iam from "@aws-cdk/aws-iam";
 import * as s3 from "@aws-cdk/aws-s3";
+import * as events from "@aws-cdk/aws-events";
+import * as targets from "@aws-cdk/aws-events-targets";
 import { Subnet, Vpc } from "@aws-cdk/aws-ec2";
 
 export class CdkStack extends cdk.Stack {
@@ -94,10 +96,20 @@ export class CdkStack extends cdk.Stack {
       },
     });
 
-    const snsPolicyStatment = new iam.PolicyStatement();
-    snsPolicyStatment.addActions("SNS:Publish");
-    snsPolicyStatment.addResources(topicParameter.valueAsString);
+    const frequency = cdk.Duration.days(1);
+    const schedule = events.Schedule.rate(frequency);
+    const target = new targets.LambdaFunction(tagJanitorLambda);
+    new events.Rule(this, "rule", {
+      schedule: schedule,
+      targets: [target],
+      description: `Run tag-janitor every ${frequency.toHumanString()}`,
+      enabled: true,
+    });
 
-    tagJanitorLambda.addToRolePolicy(snsPolicyStatment);
+    const snsPolicyStatement = new iam.PolicyStatement();
+    snsPolicyStatement.addActions("SNS:Publish");
+    snsPolicyStatement.addResources(topicParameter.valueAsString);
+
+    tagJanitorLambda.addToRolePolicy(snsPolicyStatement);
   }
 }
