@@ -30,7 +30,7 @@ function createNotifyParams({
   return {
     subject: `AWS account ${accountName} has instances with missing tags`,
     message: message,
-    target: { Stack: "testing-node-client" }, // TODO: Change this to `{ AwsAccount: accountNumber }` to make live
+    target: { AwsAccount: accountNumber },
     channel: RequestedChannel.Email,
     topicArn: topicArn,
     sourceSystem: "tag-janitor",
