@@ -96,7 +96,7 @@ export class CdkStack extends cdk.Stack {
       },
     });
 
-    const frequency = cdk.Duration.days(1);
+    const frequency = cdk.Duration.days(7);
     const schedule = events.Schedule.rate(frequency);
     const target = new targets.LambdaFunction(tagJanitorLambda);
     new events.Rule(this, "rule", {
