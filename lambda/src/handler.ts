@@ -79,9 +79,11 @@ export function getFormattedInstanceList(instances: Instance[]) {
         .join(", ");
       const s = missingTags.length > 1 ? "(s)" : "";
       const hyperlinkInstanceName = `[${instance.instanceName}](${instance.meta.href})`;
-      return `* **${hyperlinkInstanceName}**${
-        presentTags && ` (${presentTags})`
-      } is missing tag${s} **${missingTags}**`;
+      const additionalInfo = [
+        instance.specification.instanceType,
+        ...(presentTags ? [presentTags] : []),
+      ].join(", ");
+      return `* **${hyperlinkInstanceName}** (${additionalInfo}) is missing tag${s} **${missingTags}**`;
     })
     .join("\n");
 }
