@@ -34,12 +34,12 @@ Or, run `scripts/start.sh` to do this for you!
 
 == How to run the tests
 
-[Install Jest](https://jestjs.io/docs/en/getting-started) and run the tests from the `lamdba` directory:
+Install all dependencies and run the tests from the `lamdba` directory:
 
 [source,bash]
 ----
-$ yarn add --dev jest
 $ cd lambda
+$ yarn # installs dependencies
 $ yarn test
 ----
 
