@@ -14,6 +14,10 @@ echo "##teamcity[testSuiteStarted name='lint']"
 yarn lint
 echo "##teamcity[testSuiteFinished name='lint']"
 
+echo "##teamcity[testSuiteStarted name='test']"
+yarn test
+echo "##teamcity[testSuiteFinished name='test']"
+
 echo "##teamcity[testSuiteStarted name='compile']"
 yarn compile
 echo "##teamcity[testSuiteFinished name='compile']"
