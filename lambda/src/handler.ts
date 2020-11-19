@@ -67,19 +67,26 @@ function groupInstancesWithAccounts({
   return accounts;
 }
 
-function getFormattedInstanceList(instances: Instance[]) {
+export function getFormattedInstanceList(instances: Instance[]) {
+  const tags = ["App", "Stack", "Stage"];
+
   return instances
     .map((instance) => {
-      const missingTags = ["App", "Stack", "Stage"]
-        .filter((tag) => !instance.tags[tag])
+      const missingTags = tags.filter((tag) => !instance.tags[tag]).join(", ");
+      const presentTags = tags
+        .filter((tag) => !missingTags.includes(tag))
+        .map((tag) => `${tag}: ${instance.tags[tag]}`)
         .join(", ");
       const s = missingTags.length > 1 ? "(s)" : "";
-      return `* **[${instance.instanceName}](${instance.meta.href})** is missing tag${s} **${missingTags}**`;
+      const hyperlinkInstanceName = `[${instance.instanceName}](${instance.meta.href})`;
+      return `* **${hyperlinkInstanceName}**${
+        presentTags && ` (${presentTags})`
+      } is missing tag${s} **${missingTags}**`;
     })
     .join("\n");
 }
 
-function generateMessage({
+export function generateMessage({
   accountName,
   accountNumber,
   instances,
@@ -91,7 +98,7 @@ function generateMessage({
   formattedInstanceList: string;
 }): string {
   return `Hello,
-  
+
 The AWS account ${accountNumber} (**${accountName}**) has ${instances.length} instances missing either Stack, Stage or App tags:
 
 ${formattedInstanceList}
