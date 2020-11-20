@@ -23,10 +23,10 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-iam": "^1.67.0",
-    "@aws-cdk/aws-lambda": "^1.67.0",
-    "@aws-cdk/aws-s3": "^1.67.0",
-    "@aws-cdk/core": "^1.67.0",
+    "@aws-cdk/aws-iam": "^1.71.0",
+    "@aws-cdk/aws-lambda": "^1.71.0",
+    "@aws-cdk/aws-s3": "^1.71.0",
+    "@aws-cdk/core": "^1.71.0",
     "source-map-support": "^0.5.16"
   }
 }
