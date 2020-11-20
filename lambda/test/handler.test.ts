@@ -53,9 +53,7 @@ Please update your instances or Cloudformation to include the required tags.
             stack: "stack1",
           }),
         ];
-        const result = getFormattedInstanceList(
-          (instances as unknown) as Instance[]
-        );
+        const result = getFormattedInstanceList(instances as Instance[]);
         expect(result).toEqual(
           "* **[instance1](href1)** (t3.large, App: app1, Stack: stack1) is missing tag(s) **Stage**"
         );
@@ -79,9 +77,8 @@ Please update your instances or Cloudformation to include the required tags.
             type: "m2.micro",
           }),
         ];
-        const result = getFormattedInstanceList(
-          (instances as unknown) as Instance[]
-        );
+        const result = getFormattedInstanceList(instances as Instance[]);
+
         expect(result).toEqual(
           `* **[instance1](href1)** (t3.large) is missing tag(s) **App, Stack, Stage**
 * **[instance2](href2)** (m2.micro, App: app2) is missing tag(s) **Stack, Stage**
