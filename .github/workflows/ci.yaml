@@ -6,7 +6,7 @@ on:
     branches:
       - main
 jobs:
-  ci:
+  cdk-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,4 +17,4 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: ./scripts/ci.sh
+    - run: ./scripts/test-cdk.sh
