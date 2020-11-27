@@ -1,0 +1,242 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The tag-janitor stack matches the snapshot 1`] = `
+Object {
+  "Parameters": Object {
+    "BucketName": Object {
+      "Description": "BucketName",
+      "Type": "String",
+    },
+    "accountsAllowList": Object {
+      "Description": "A comma separated list of account numbers to include",
+      "Type": "String",
+    },
+    "prismUrl": Object {
+      "Description": "Base URL for Prism",
+      "Type": "String",
+    },
+    "stack": Object {
+      "Description": "Stack",
+      "Type": "String",
+    },
+    "stage": Object {
+      "Description": "Stage",
+      "Type": "String",
+    },
+    "subnetIds": Object {
+      "Description": "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
+      "Type": "List<AWS::EC2::Subnet::Id>",
+    },
+    "topicArn": Object {
+      "Description": "The ARN of the SNS topic to send messages to",
+      "Type": "String",
+    },
+    "vpcId": Object {
+      "Description": "The VPC ID for the lambda to live in (this allows it to talk to Prism)",
+      "Type": "AWS::EC2::VPC::Id",
+    },
+  },
+  "Resources": Object {
+    "ruleF2C1DCDC": Object {
+      "Properties": Object {
+        "Description": "Run tag-janitor every 7 days",
+        "ScheduleExpression": "rate(7 days)",
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "tagjanitorlambda3E6E11A1",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "tagjanitorlambda3E6E11A1": Object {
+      "DependsOn": Array [
+        "tagjanitorlambdaServiceRoleDefaultPolicy79766902",
+        "tagjanitorlambdaServiceRoleD63E9AA7",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "BucketName",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Ref": "stack",
+                },
+                "/",
+                Object {
+                  "Ref": "stage",
+                },
+                "/tag-janitor/tag-janitor.zip",
+              ],
+            ],
+          },
+        },
+        "Description": "Lambda to notify about instances with missing tags",
+        "Environment": Object {
+          "Variables": Object {
+            "ACCOUNTS_ALLOW_LIST": Object {
+              "Ref": "accountsAllowList",
+            },
+            "PRISM_URL": Object {
+              "Ref": "prismUrl",
+            },
+            "STAGE": Object {
+              "Ref": "stage",
+            },
+            "TOPIC_ARN": Object {
+              "Ref": "topicArn",
+            },
+          },
+        },
+        "FunctionName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "tag-janitor-",
+              Object {
+                "Ref": "stage",
+              },
+            ],
+          ],
+        },
+        "Handler": "dist/handler.handler",
+        "MemorySize": 512,
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "tagjanitorlambdaServiceRoleD63E9AA7",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs12.x",
+        "Timeout": 30,
+        "VpcConfig": Object {
+          "SecurityGroupIds": Array [
+            Object {
+              "Fn::GetAtt": Array [
+                "tagjanitorlambdaSecurityGroupCDEEB485",
+                "GroupId",
+              ],
+            },
+          ],
+          "SubnetIds": Object {
+            "Ref": "subnetIds",
+          },
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "tagjanitorlambdaAllowEventRuletagjanitorruleC323552A3B02531A": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "tagjanitorlambda3E6E11A1",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::GetAtt": Array [
+            "ruleF2C1DCDC",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "tagjanitorlambdaSecurityGroupCDEEB485": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatic security group for Lambda Function tagjanitortagjanitorlambdaBA439B3D",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "vpcId",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "tagjanitorlambdaServiceRoleD63E9AA7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "tagjanitorlambdaServiceRoleDefaultPolicy79766902": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "SNS:Publish",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Ref": "topicArn",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "tagjanitorlambdaServiceRoleDefaultPolicy79766902",
+        "Roles": Array [
+          Object {
+            "Ref": "tagjanitorlambdaServiceRoleD63E9AA7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+  },
+}
+`;
