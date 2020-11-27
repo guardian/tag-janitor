@@ -32,6 +32,17 @@ $ yarn start # runs the handler locally
 
 Or, run `scripts/start.sh` to do this for you!
 
+== How to run the tests
+
+Install all dependencies and run the tests from the `lamdba` directory:
+
+[source,bash]
+----
+$ cd lambda
+$ yarn # installs dependencies
+$ yarn test
+----
+
 == How to deploy
 
 Deploy this app through TeamCity and RiffRaff. See what CI is doing in `scripts/ci.sh`
