@@ -7,5 +7,6 @@ ROOT_DIR="${DIR}/.."
 
 pushd "${ROOT_DIR}/cdk"
 yarn --silent
+yarn lint
 yarn test
 popd
