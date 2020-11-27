@@ -1,50 +1,51 @@
-import * as cdk from "@aws-cdk/core";
-import * as lambda from "@aws-cdk/aws-lambda";
-import * as iam from "@aws-cdk/aws-iam";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as events from "@aws-cdk/aws-events";
-import * as targets from "@aws-cdk/aws-events-targets";
 import { Subnet, Vpc } from "@aws-cdk/aws-ec2";
+import { Rule, Schedule } from "@aws-cdk/aws-events";
+import { LambdaFunction } from "@aws-cdk/aws-events-targets";
+import { PolicyStatement } from "@aws-cdk/aws-iam";
+import { Code, Function, Runtime } from "@aws-cdk/aws-lambda";
+import { Bucket } from "@aws-cdk/aws-s3";
+import type { Construct, StackProps } from "@aws-cdk/core";
+import { CfnParameter, Duration, Stack } from "@aws-cdk/core";
 
-export class CdkStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+export class CdkStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const bucketName = new cdk.CfnParameter(this, "BucketName", {
+    const bucketName = new CfnParameter(this, "BucketName", {
       type: "String",
       description: "BucketName",
     });
 
     const app = "tag-janitor";
 
-    const stackParameter = new cdk.CfnParameter(this, "stack", {
+    const stackParameter = new CfnParameter(this, "stack", {
       type: "String",
       description: "Stack",
     });
 
-    const stageParameter = new cdk.CfnParameter(this, "stage", {
+    const stageParameter = new CfnParameter(this, "stage", {
       type: "String",
       description: "Stage",
     });
 
-    const topicParameter = new cdk.CfnParameter(this, "topicArn", {
+    const topicParameter = new CfnParameter(this, "topicArn", {
       type: "String",
       description: "The ARN of the SNS topic to send messages to",
     });
 
-    const vpcParameter = new cdk.CfnParameter(this, "vpcId", {
+    const vpcParameter = new CfnParameter(this, "vpcId", {
       type: "AWS::EC2::VPC::Id",
       description:
         "The VPC ID for the lambda to live in (this allows it to talk to Prism)",
     }); // TODO: Look this up in SSM https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-ssm-parameter-types
 
-    const subnetsParameter = new cdk.CfnParameter(this, "subnetIds", {
+    const subnetsParameter = new CfnParameter(this, "subnetIds", {
       type: "List<AWS::EC2::Subnet::Id>",
       description:
         "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
     }); // TODO: Look this up in SSM https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-ssm-parameter-types
 
-    const accountsAllowListParameter = new cdk.CfnParameter(
+    const accountsAllowListParameter = new CfnParameter(
       this,
       "accountsAllowList",
       {
@@ -53,12 +54,12 @@ export class CdkStack extends cdk.Stack {
       }
     );
 
-    const prismUrl = new cdk.CfnParameter(this, "prismUrl", {
+    const prismUrl = new CfnParameter(this, "prismUrl", {
       type: "String",
       description: "Base URL for Prism",
     });
 
-    const deployBucket = s3.Bucket.fromBucketName(
+    const deployBucket = Bucket.fromBucketName(
       this,
       "DeployBucket",
       bucketName.valueAsString
@@ -73,11 +74,11 @@ export class CdkStack extends cdk.Stack {
       availabilityZones: this.availabilityZones,
     });
 
-    const tagJanitorLambda = new lambda.Function(this, `${app}-lambda`, {
+    const tagJanitorLambda = new Function(this, `${app}-lambda`, {
       handler: "dist/handler.handler",
       functionName: `${app}-${stageParameter.valueAsString}`,
-      runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.fromBucket(
+      runtime: Runtime.NODEJS_12_X,
+      code: Code.fromBucket(
         deployBucket,
         `${stackParameter.valueAsString}/${stageParameter.valueAsString}/${app}/${app}.zip`
       ),
@@ -88,7 +89,7 @@ export class CdkStack extends cdk.Stack {
         PRISM_URL: prismUrl.valueAsString,
       },
       description: "Lambda to notify about instances with missing tags",
-      timeout: cdk.Duration.seconds(30),
+      timeout: Duration.seconds(30),
       memorySize: 512,
       vpc: vpc,
       vpcSubnets: {
@@ -96,17 +97,17 @@ export class CdkStack extends cdk.Stack {
       },
     });
 
-    const frequency = cdk.Duration.days(7);
-    const schedule = events.Schedule.rate(frequency);
-    const target = new targets.LambdaFunction(tagJanitorLambda);
-    new events.Rule(this, "rule", {
+    const frequency = Duration.days(7);
+    const schedule = Schedule.rate(frequency);
+    const target = new LambdaFunction(tagJanitorLambda);
+    new Rule(this, "rule", {
       schedule: schedule,
       targets: [target],
       description: `Run tag-janitor every ${frequency.toHumanString()}`,
       enabled: true,
     });
 
-    const snsPolicyStatement = new iam.PolicyStatement();
+    const snsPolicyStatement = new PolicyStatement();
     snsPolicyStatement.addActions("SNS:Publish");
     snsPolicyStatement.addResources(topicParameter.valueAsString);
 
