@@ -27,6 +27,6 @@
   },
   "dependencies": {
     "@guardian/anghammarad": "^1.0.0",
-    "axios": "^0.20.0"
+    "axios": "^0.21.0"
   }
 }
