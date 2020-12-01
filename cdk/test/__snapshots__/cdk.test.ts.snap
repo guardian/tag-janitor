@@ -21,10 +21,6 @@ Object {
       "Description": "Stage name",
       "Type": "String",
     },
-    "Subnets": Object {
-      "Description": "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
-      "Type": "List<AWS::EC2::Subnet::Id>",
-    },
     "accountsAllowList": Object {
       "Description": "A comma separated list of account numbers to include",
       "Type": "String",
@@ -32,6 +28,10 @@ Object {
     "prismUrl": Object {
       "Description": "Base URL for Prism",
       "Type": "String",
+    },
+    "subnetIds": Object {
+      "Description": "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
+      "Type": "List<AWS::EC2::Subnet::Id>",
     },
     "topicArn": Object {
       "Description": "The ARN of the SNS topic to send messages to",
@@ -131,7 +131,7 @@ Object {
             },
           ],
           "SubnetIds": Object {
-            "Ref": "Subnets",
+            "Ref": "subnetIds",
           },
         },
       },
