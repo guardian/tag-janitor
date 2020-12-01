@@ -1,6 +1,6 @@
 import { PolicyStatement } from "@aws-cdk/aws-iam";
 import { Runtime } from "@aws-cdk/aws-lambda";
-import type { Construct, StackProps } from "@aws-cdk/core";
+import type { App, StackProps } from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
 import {
   GuStack,
@@ -12,7 +12,7 @@ import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
 import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
 
 export class CdkStack extends GuStack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
     const app = "tag-janitor";
 
