@@ -7,7 +7,7 @@ ROOT_DIR="${DIR}/.."
 OUTPUT_DIR="${ROOT_DIR}/cloudformation/cdk"
 
 pushd "${ROOT_DIR}"/cdk || exit
-yarn --silent
+yarn --network-concurrency 1 --frozen-lockfile --silent
 rm -r "${OUTPUT_DIR}" || true
 yarn cdk synth -o "${OUTPUT_DIR}" > /dev/null
 popd
