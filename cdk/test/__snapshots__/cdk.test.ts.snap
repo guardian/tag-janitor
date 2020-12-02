@@ -7,20 +7,26 @@ Object {
       "Description": "BucketName",
       "Type": "String",
     },
+    "Stack": Object {
+      "Default": "deploy",
+      "Description": "Name of this stack",
+      "Type": "String",
+    },
+    "Stage": Object {
+      "AllowedValues": Array [
+        "CODE",
+        "PROD",
+      ],
+      "Default": "CODE",
+      "Description": "Stage name",
+      "Type": "String",
+    },
     "accountsAllowList": Object {
       "Description": "A comma separated list of account numbers to include",
       "Type": "String",
     },
     "prismUrl": Object {
       "Description": "Base URL for Prism",
-      "Type": "String",
-    },
-    "stack": Object {
-      "Description": "Stack",
-      "Type": "String",
-    },
-    "stage": Object {
-      "Description": "Stage",
       "Type": "String",
     },
     "subnetIds": Object {
@@ -37,25 +43,6 @@ Object {
     },
   },
   "Resources": Object {
-    "ruleF2C1DCDC": Object {
-      "Properties": Object {
-        "Description": "Run tag-janitor every 7 days",
-        "ScheduleExpression": "rate(7 days)",
-        "State": "ENABLED",
-        "Targets": Array [
-          Object {
-            "Arn": Object {
-              "Fn::GetAtt": Array [
-                "tagjanitorlambda3E6E11A1",
-                "Arn",
-              ],
-            },
-            "Id": "Target0",
-          },
-        ],
-      },
-      "Type": "AWS::Events::Rule",
-    },
     "tagjanitorlambda3E6E11A1": Object {
       "DependsOn": Array [
         "tagjanitorlambdaServiceRoleDefaultPolicy79766902",
@@ -71,11 +58,11 @@ Object {
               "",
               Array [
                 Object {
-                  "Ref": "stack",
+                  "Ref": "Stack",
                 },
                 "/",
                 Object {
-                  "Ref": "stage",
+                  "Ref": "Stage",
                 },
                 "/tag-janitor/tag-janitor.zip",
               ],
@@ -92,7 +79,7 @@ Object {
               "Ref": "prismUrl",
             },
             "STAGE": Object {
-              "Ref": "stage",
+              "Ref": "Stage",
             },
             "TOPIC_ARN": Object {
               "Ref": "topicArn",
@@ -105,7 +92,7 @@ Object {
             Array [
               "tag-janitor-",
               Object {
-                "Ref": "stage",
+                "Ref": "Stage",
               },
             ],
           ],
@@ -119,6 +106,20 @@ Object {
           ],
         },
         "Runtime": "nodejs12.x",
+        "Tags": Array [
+          Object {
+            "Key": "Stack",
+            "Value": Object {
+              "Ref": "Stack",
+            },
+          },
+          Object {
+            "Key": "Stage",
+            "Value": Object {
+              "Ref": "Stage",
+            },
+          },
+        ],
         "Timeout": 30,
         "VpcConfig": Object {
           "SecurityGroupIds": Array [
@@ -136,25 +137,6 @@ Object {
       },
       "Type": "AWS::Lambda::Function",
     },
-    "tagjanitorlambdaAllowEventRuletagjanitorruleC323552A3B02531A": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "tagjanitorlambda3E6E11A1",
-            "Arn",
-          ],
-        },
-        "Principal": "events.amazonaws.com",
-        "SourceArn": Object {
-          "Fn::GetAtt": Array [
-            "ruleF2C1DCDC",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
     "tagjanitorlambdaSecurityGroupCDEEB485": Object {
       "Properties": Object {
         "GroupDescription": "Automatic security group for Lambda Function tagjanitortagjanitorlambdaBA439B3D",
@@ -163,6 +145,20 @@ Object {
             "CidrIp": "0.0.0.0/0",
             "Description": "Allow all outbound traffic by default",
             "IpProtocol": "-1",
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "Stack",
+            "Value": Object {
+              "Ref": "Stack",
+            },
+          },
+          Object {
+            "Key": "Stage",
+            "Value": Object {
+              "Ref": "Stage",
+            },
           },
         ],
         "VpcId": Object {
@@ -211,6 +207,20 @@ Object {
             ],
           },
         ],
+        "Tags": Array [
+          Object {
+            "Key": "Stack",
+            "Value": Object {
+              "Ref": "Stack",
+            },
+          },
+          Object {
+            "Key": "Stage",
+            "Value": Object {
+              "Ref": "Stage",
+            },
+          },
+        ],
       },
       "Type": "AWS::IAM::Role",
     },
@@ -236,6 +246,44 @@ Object {
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "tagjanitorlambdatagjanitorlambda7days250DED67": Object {
+      "Properties": Object {
+        "Description": "Run tag-janitor every 7 days",
+        "ScheduleExpression": "rate(7 days)",
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "tagjanitorlambda3E6E11A1",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "tagjanitorlambdatagjanitorlambda7daysAllowEventRuletagjanitortagjanitorlambdatagjanitorlambda7days9D698530D511210C": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "tagjanitorlambda3E6E11A1",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::GetAtt": Array [
+            "tagjanitorlambdatagjanitorlambda7days250DED67",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
     },
   },
 }
