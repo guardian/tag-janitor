@@ -8,8 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
+    "format": "prettier --write \"{lib,bin}/**/*.ts\"",
     "cdk": "cdk",
-    "lint": "eslint lib --ext .ts"
+    "lint": "eslint lib/** bin/** --ext .ts"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.74.0",
