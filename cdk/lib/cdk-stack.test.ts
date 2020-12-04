@@ -1,6 +1,6 @@
 import { SynthUtils } from "@aws-cdk/assert";
 import { App } from "@aws-cdk/core";
-import { CdkStack } from "../lib/cdk-stack";
+import { CdkStack } from "./cdk-stack";
 
 describe("The tag-janitor stack", () => {
   it("matches the snapshot", () => {
