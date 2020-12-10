@@ -22,7 +22,7 @@
     "@aws-cdk/cx-api" "1.74.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-apigateway@1.74.0":
+"@aws-cdk/aws-apigateway@1.74.0", "@aws-cdk/aws-apigateway@~1.74.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigateway/-/aws-apigateway-1.74.0.tgz#17a0771c2129520f8ca7c922b08a5b386f2989e1"
   integrity sha512-kSwZJ7eVo6qmOsfxN4LRIwmNpiOBxsEzswVcJnyeKPMfD2KRj/UGZp6hDeoj4Mf734RXiH4qLUlrtjrcSP1vTw==
@@ -336,7 +336,7 @@
     "@aws-cdk/region-info" "1.74.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-events-targets@1.74.0":
+"@aws-cdk/aws-events-targets@1.74.0", "@aws-cdk/aws-events-targets@~1.74.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-events-targets/-/aws-events-targets-1.74.0.tgz#a88f1c50ead14aecd5270a11ea7b3639fef72f5c"
   integrity sha512-9xEY59aTNbsMmXLchpeX4qgIm8Ggh+PpzPxVH/s9wQM2i40lInQOZgs0wJPGMHY7Y8gVTu2uVsyrchPeXVuUQw==
@@ -404,7 +404,7 @@
     "@aws-cdk/core" "1.74.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-lambda@1.74.0":
+"@aws-cdk/aws-lambda@1.74.0", "@aws-cdk/aws-lambda@~1.74.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-lambda/-/aws-lambda-1.74.0.tgz#52175fbc9e679ca5c0f4d15e0666c99fc4a953d0"
   integrity sha512-Ju3/mhnli33xnO2qvJUs11djva12SHnmJPGtbx4Nz33z577/pCwLZYWa7noP8eUzAyBglfNlPG8JWH+fNHPbew==
@@ -495,7 +495,7 @@
     "@aws-cdk/cx-api" "1.74.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-s3@1.74.0":
+"@aws-cdk/aws-s3@1.74.0", "@aws-cdk/aws-s3@~1.74.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-s3/-/aws-s3-1.74.0.tgz#5b53839c3af0f67bfb1e96061f6a1ea5be445fe9"
   integrity sha512-xbRbI90hUvmVwGHHMr4dPWv0TXBxr/HeeaLzqLDHv36+TKA0wMR7ttRm3pbT3Kf/YjqSty788rom6lVqaAu81Q==
@@ -961,17 +961,21 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@guardian/cdk@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-0.1.0.tgz#dde10620cc4c9b97555ee1ccfb77027d5b9e1bdc"
-  integrity sha512-fmZG3ed5ZlDW2OsR3kkWPSZcyNN1ilF2li41xiFMD5vrUKqxeTWUkwOLkwWH3qlhU6Dw1SQhwcaNsnegkGsABA==
+"@guardian/cdk@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-0.3.0.tgz#4644d27ba5ff646a8952b996f4f286431ab324cb"
+  integrity sha512-rtXCHVoyRHMhdADX2W4H9Dt3K/rIrymBKsNfBQLiOMcbC0+raH6XHGojSMOfAIdOvr4SfppRZmgasw/DtV1DHg==
   dependencies:
     "@aws-cdk/assert" "~1.74.0"
+    "@aws-cdk/aws-apigateway" "~1.74.0"
     "@aws-cdk/aws-autoscaling" "~1.74.0"
     "@aws-cdk/aws-ec2" "~1.74.0"
     "@aws-cdk/aws-elasticloadbalancingv2" "~1.74.0"
+    "@aws-cdk/aws-events-targets" "~1.74.0"
     "@aws-cdk/aws-iam" "~1.74.0"
+    "@aws-cdk/aws-lambda" "~1.74.0"
     "@aws-cdk/aws-rds" "~1.74.0"
+    "@aws-cdk/aws-s3" "~1.74.0"
     "@aws-cdk/core" "~1.74.0"
 
 "@guardian/eslint-config-typescript@^0.4.1":
