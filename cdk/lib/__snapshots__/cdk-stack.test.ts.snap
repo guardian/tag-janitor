@@ -108,6 +108,10 @@ Object {
         "Runtime": "nodejs12.x",
         "Tags": Array [
           Object {
+            "Key": "App",
+            "Value": "tag-janitor",
+          },
+          Object {
             "Key": "Stack",
             "Value": Object {
               "Ref": "Stack",
@@ -148,6 +152,10 @@ Object {
           },
         ],
         "Tags": Array [
+          Object {
+            "Key": "App",
+            "Value": "tag-janitor",
+          },
           Object {
             "Key": "Stack",
             "Value": Object {
@@ -209,6 +217,10 @@ Object {
         ],
         "Tags": Array [
           Object {
+            "Key": "App",
+            "Value": "tag-janitor",
+          },
+          Object {
             "Key": "Stack",
             "Value": Object {
               "Ref": "Stack",
@@ -229,6 +241,47 @@ Object {
         "PolicyDocument": Object {
           "Statement": Array [
             Object {
+              "Action": Array [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::",
+                      Object {
+                        "Ref": "BucketName",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::",
+                      Object {
+                        "Ref": "BucketName",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
               "Action": "SNS:Publish",
               "Effect": "Allow",
               "Resource": Object {
@@ -247,7 +300,26 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
-    "tagjanitorlambdatagjanitorlambda7days250DED67": Object {
+    "tagjanitorlambdatagjanitorlambdarate7days0AllowEventRuletagjanitortagjanitorlambdatagjanitorlambdarate7days03288E20D8CA3ECD4": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "tagjanitorlambda3E6E11A1",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::GetAtt": Array [
+            "tagjanitorlambdatagjanitorlambdarate7days0B5F68379",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "tagjanitorlambdatagjanitorlambdarate7days0B5F68379": Object {
       "Properties": Object {
         "Description": "Run tag-janitor every 7 days",
         "ScheduleExpression": "rate(7 days)",
@@ -265,25 +337,6 @@ Object {
         ],
       },
       "Type": "AWS::Events::Rule",
-    },
-    "tagjanitorlambdatagjanitorlambda7daysAllowEventRuletagjanitortagjanitorlambdatagjanitorlambda7days9D698530D511210C": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "tagjanitorlambda3E6E11A1",
-            "Arn",
-          ],
-        },
-        "Principal": "events.amazonaws.com",
-        "SourceArn": Object {
-          "Fn::GetAtt": Array [
-            "tagjanitorlambdatagjanitorlambda7days250DED67",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
     },
   },
 }

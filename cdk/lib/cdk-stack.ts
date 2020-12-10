@@ -1,7 +1,9 @@
+import { Schedule } from "@aws-cdk/aws-events";
 import { PolicyStatement } from "@aws-cdk/aws-iam";
 import { Runtime } from "@aws-cdk/aws-lambda";
-import type { App, StackProps } from "@aws-cdk/core";
+import type { App } from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
+import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
 import {
   GuStack,
   GuStringParameter,
@@ -12,9 +14,8 @@ import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
 import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
 
 export class CdkStack extends GuStack {
-  constructor(scope: App, id: string, props?: StackProps) {
+  constructor(scope: App, id: string, props?: GuStackProps) {
     super(scope, id, props);
-    const app = "tag-janitor";
 
     const parameters = {
       bucketName: new GuStringParameter(this, "BucketName", {
@@ -41,16 +42,16 @@ export class CdkStack extends GuStack {
 
     const lambdaFrequency = Duration.days(7);
 
-    const tagJanitorLambda = new GuLambdaFunction(this, `${app}-lambda`, {
+    const tagJanitorLambda = new GuLambdaFunction(this, `${this.app}-lambda`, {
       handler: "dist/handler.handler",
-      functionName: `${app}-${this.stage.valueAsString}`,
+      functionName: `${this.app}-${this.stage}`,
       runtime: Runtime.NODEJS_12_X,
       code: {
         bucket: parameters.bucketName.valueAsString,
-        key: `${this.stack.valueAsString}/${this.stage.valueAsString}/${app}/${app}.zip`,
+        key: `${this.stack}/${this.stage}/${this.app}/${this.app}.zip`,
       },
       environment: {
-        STAGE: this.stage.valueAsString,
+        STAGE: this.stage,
         TOPIC_ARN: parameters.topic.valueAsString,
         ACCOUNTS_ALLOW_LIST: parameters.accountsAllowList.valueAsString,
         PRISM_URL: parameters.prismUrl.valueAsString,
@@ -64,7 +65,7 @@ export class CdkStack extends GuStack {
       },
       rules: [
         {
-          frequency: lambdaFrequency,
+          schedule: Schedule.rate(lambdaFrequency),
           description: `Run tag-janitor every ${lambdaFrequency.toHumanString()}`,
         },
       ],

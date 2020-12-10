@@ -5,7 +5,7 @@ import { CdkStack } from "./cdk-stack";
 describe("The tag-janitor stack", () => {
   it("matches the snapshot", () => {
     const app = new App();
-    const stack = new CdkStack(app, "tag-janitor");
+    const stack = new CdkStack(app, "tag-janitor", { app: "tag-janitor" });
 
     expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
   });
