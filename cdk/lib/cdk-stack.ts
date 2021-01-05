@@ -14,7 +14,7 @@ import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
 import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
 
 export class CdkStack extends GuStack {
-  constructor(scope: App, id: string, props?: GuStackProps) {
+  constructor(scope: App, id: string, props: GuStackProps) {
     super(scope, id, props);
 
     const parameters = {
