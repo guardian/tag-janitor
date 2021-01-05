@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@aws-cdk/assert@1.74.0", "@aws-cdk/assert@~1.74.0":
+"@aws-cdk/assert@~1.74.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/assert/-/assert-1.74.0.tgz#82795a3bb21ede93288a60322804f6f4e2d4959e"
   integrity sha512-5M3M4lcSS2dGPgVANhv5GjqC6nNBy9bL1XECAJj3lg7q+6zJ00+0wq4bB0wyvm/mE+S0axkGZ4LVHF5QA2gCfQ==
@@ -336,7 +336,7 @@
     "@aws-cdk/region-info" "1.74.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-events-targets@1.74.0", "@aws-cdk/aws-events-targets@~1.74.0":
+"@aws-cdk/aws-events-targets@~1.74.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-events-targets/-/aws-events-targets-1.74.0.tgz#a88f1c50ead14aecd5270a11ea7b3639fef72f5c"
   integrity sha512-9xEY59aTNbsMmXLchpeX4qgIm8Ggh+PpzPxVH/s9wQM2i40lInQOZgs0wJPGMHY7Y8gVTu2uVsyrchPeXVuUQw==
@@ -367,7 +367,7 @@
     "@aws-cdk/core" "1.74.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-iam@1.74.0", "@aws-cdk/aws-iam@~1.74 .0", "@aws-cdk/aws-iam@~1.74.0":
+"@aws-cdk/aws-iam@1.74.0", "@aws-cdk/aws-iam@~1.74.0":
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-iam/-/aws-iam-1.74.0.tgz#c255c9676fb6048ab27c00d111ed5e7d8b46877c"
   integrity sha512-5Eq4e4/be2HMFZXc1sCeNjqgTyjlWgvIjbLh0Q4c01V05r7MbPdmfZRurbeEA6NohGf+zYFQrCzPnTaqvFPFHA==
@@ -961,10 +961,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@guardian/cdk@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-0.3.0.tgz#4644d27ba5ff646a8952b996f4f286431ab324cb"
-  integrity sha512-rtXCHVoyRHMhdADX2W4H9Dt3K/rIrymBKsNfBQLiOMcbC0+raH6XHGojSMOfAIdOvr4SfppRZmgasw/DtV1DHg==
+"@guardian/cdk@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-0.11.0.tgz#e32087c393e9714a201476935bd021b00bd62c16"
+  integrity sha512-xT7hctVgY8itmD5t45JNLnK7JxrhkCHGv8PReNJicDaBWzqGSQ2uppcuPSYUrmdSzTgbClf6xVUgbN7JAGFB1A==
   dependencies:
     "@aws-cdk/assert" "~1.74.0"
     "@aws-cdk/aws-apigateway" "~1.74.0"
@@ -1656,7 +1656,7 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-aws-cdk@1.74.0:
+aws-cdk@~1.74.0:
   version "1.74.0"
   resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-1.74.0.tgz#d049631ea578a8b75244b13a3028134ebb56add2"
   integrity sha512-D4LKNlmvLHv+CWI/35Esaoij4v5VSqKyc+Gvnjhj1K3I4lG/AAxEy1CmRBhN/w1LJt70U9jnBpIsb6hGUlrV8A==
