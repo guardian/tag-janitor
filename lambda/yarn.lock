@@ -295,10 +295,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@guardian/anghammarad@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/anghammarad/-/anghammarad-1.0.0.tgz#759706beecf5880dc2fa9dc64d6e336ca2a59089"
-  integrity sha512-l5u9Yl9QZ6JAgAIORTwrlf46bGy+hMcRipCn9WvQs/JU4FeE+QwlQ27QThMw3YsyzJVQTUtAgTmbWs5epmuXfQ==
+"@guardian/anghammarad@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@guardian/anghammarad/-/anghammarad-1.0.1.tgz#2790382afa6ae93318dafe84c72c117b08bf3bcf"
+  integrity sha512-tWvGp4YYolcV+PROd0biFLbXTeTxg1xJLmsVSm6AX3h2+btVA9+H8DN5LBQ4mzYr+z8qcQJZuMSTi983Wnuq/g==
 
 "@guardian/node-riffraff-artifact@^0.1.9":
   version "0.1.9"
