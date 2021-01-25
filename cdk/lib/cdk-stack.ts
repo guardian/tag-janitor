@@ -6,7 +6,7 @@ import { Duration } from "@aws-cdk/core";
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
 import { GuStack, GuStringParameter, GuSubnetListParameter, GuVpcParameter } from "@guardian/cdk/lib/constructs/core";
 import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
-import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
+import { GuScheduledLambda } from "@guardian/cdk/lib/patterns/scheduled-lambda";
 
 export class CdkStack extends GuStack {
   constructor(scope: App, id: string, props: GuStackProps) {
@@ -35,7 +35,7 @@ export class CdkStack extends GuStack {
 
     const lambdaFrequency = Duration.days(7);
 
-    const tagJanitorLambda = new GuLambdaFunction(this, `${this.app}-lambda`, {
+    const tagJanitorLambda = new GuScheduledLambda(this, `${this.app}-lambda`, {
       handler: "dist/handler.handler",
       functionName: `${this.app}-${this.stage}`,
       runtime: Runtime.NODEJS_12_X,
@@ -52,16 +52,12 @@ export class CdkStack extends GuStack {
       description: "Lambda to notify about instances with missing tags",
       timeout: Duration.seconds(30),
       memorySize: 512,
-      vpc: GuVpc.fromId(this, "vpc", parameters.vpc.valueAsString),
+      vpc: GuVpc.fromId(this, "vpc", { vpcId: parameters.vpc.valueAsString }),
       vpcSubnets: {
         subnets: GuVpc.subnets(this, parameters.subnets.valueAsList),
       },
-      rules: [
-        {
-          schedule: Schedule.rate(lambdaFrequency),
-          description: `Run tag-janitor every ${lambdaFrequency.toHumanString()}`,
-        },
-      ],
+      schedule: Schedule.rate(lambdaFrequency),
+      monitoringConfiguration: { noMonitoring: true },
     });
 
     tagJanitorLambda.addToRolePolicy(

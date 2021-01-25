@@ -321,7 +321,6 @@ Object {
     },
     "tagjanitorlambdatagjanitorlambdarate7days0B5F68379": Object {
       "Properties": Object {
-        "Description": "Run tag-janitor every 7 days",
         "ScheduleExpression": "rate(7 days)",
         "State": "ENABLED",
         "Targets": Array [
