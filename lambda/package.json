@@ -16,7 +16,7 @@
   "devDependencies": {
     "@guardian/node-riffraff-artifact": "^0.1.9",
     "@types/jest": "^26.0.20",
-    "@types/node": "^14.11.5",
+    "@types/node": "^14.14.22",
     "aws-sdk": "^2.769.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.18.0",
