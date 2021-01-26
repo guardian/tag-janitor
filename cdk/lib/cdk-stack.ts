@@ -30,7 +30,7 @@ export class CdkStack extends GuStack {
     const lambdaFrequency = Duration.days(7);
 
     const tagJanitorLambda = new GuScheduledLambda(this, `${this.app}-lambda`, {
-      handler: "dist/handler.handler",
+      handler: "dist/src/handler.handler",
       functionName: `${this.app}-${this.stage}`,
       runtime: Runtime.NODEJS_12_X,
       code: {
