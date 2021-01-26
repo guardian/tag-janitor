@@ -50,8 +50,6 @@ export class CdkStack extends GuStack {
         PRISM_URL: parameters.prismUrl.valueAsString,
       },
       description: "Lambda to notify about instances with missing tags",
-      timeout: Duration.seconds(30),
-      memorySize: 512,
       vpc: GuVpc.fromId(this, "vpc", { vpcId: parameters.vpc.valueAsString }),
       vpcSubnets: {
         subnets: GuVpc.subnets(this, parameters.subnets.valueAsList),
