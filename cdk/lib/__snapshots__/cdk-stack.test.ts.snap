@@ -45,6 +45,115 @@ Object {
     },
   },
   "Resources": Object {
+    "errorpercentagealarmforscheduledlambdaF6DA7824": Object {
+      "Properties": Object {
+        "AlarmActions": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:aws:sns:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":",
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                ":jacob-testing",
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              Object {
+                "Ref": "tagjanitorlambda3E6E11A1",
+              },
+              " exceeded 99% error rate",
+            ],
+          ],
+        },
+        "AlarmName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "High error % from ",
+              Object {
+                "Ref": "tagjanitorlambda3E6E11A1",
+              },
+              " lambda in ",
+              Object {
+                "Ref": "Stage",
+              },
+            ],
+          ],
+        },
+        "ComparisonOperator": "GreaterThanThreshold",
+        "EvaluationPeriods": 1,
+        "Metrics": Array [
+          Object {
+            "Expression": "100*m1/m2",
+            "Id": "expr_1",
+            "Label": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "Error % of ",
+                  Object {
+                    "Ref": "tagjanitorlambda3E6E11A1",
+                  },
+                ],
+              ],
+            },
+          },
+          Object {
+            "Id": "m1",
+            "MetricStat": Object {
+              "Metric": Object {
+                "Dimensions": Array [
+                  Object {
+                    "Name": "FunctionName",
+                    "Value": Object {
+                      "Ref": "tagjanitorlambda3E6E11A1",
+                    },
+                  },
+                ],
+                "MetricName": "Errors",
+                "Namespace": "AWS/Lambda",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+            },
+            "ReturnData": false,
+          },
+          Object {
+            "Id": "m2",
+            "MetricStat": Object {
+              "Metric": Object {
+                "Dimensions": Array [
+                  Object {
+                    "Name": "FunctionName",
+                    "Value": Object {
+                      "Ref": "tagjanitorlambda3E6E11A1",
+                    },
+                  },
+                ],
+                "MetricName": "Invocations",
+                "Namespace": "AWS/Lambda",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Threshold": 99,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
     "tagjanitorlambda3E6E11A1": Object {
       "DependsOn": Array [
         "tagjanitorlambdaServiceRoleDefaultPolicy79766902",
