@@ -7,6 +7,11 @@ Object {
       "Description": "BucketName",
       "Type": "String",
     },
+    "PrivateSubnets": Object {
+      "Default": "/account/vpc/primary/subnets/private",
+      "Description": "A list of private subnets",
+      "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
+    },
     "Stack": Object {
       "Default": "deploy",
       "Description": "Name of this stack",
@@ -21,6 +26,11 @@ Object {
       "Description": "Stage name",
       "Type": "String",
     },
+    "VpcId": Object {
+      "Default": "/account/vpc/primary/id",
+      "Description": "Virtual Private Cloud to run EC2 instances within",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
+    },
     "accountsAllowList": Object {
       "Description": "A comma separated list of account numbers to include",
       "Type": "String",
@@ -29,17 +39,9 @@ Object {
       "Description": "Base URL for Prism",
       "Type": "String",
     },
-    "subnetIds": Object {
-      "Description": "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
-      "Type": "List<AWS::EC2::Subnet::Id>",
-    },
     "topicArn": Object {
       "Description": "The ARN of the SNS topic to send messages to",
       "Type": "String",
-    },
-    "vpcId": Object {
-      "Description": "The VPC ID for the lambda to live in (this allows it to talk to Prism)",
-      "Type": "AWS::EC2::VPC::Id",
     },
   },
   "Resources": Object {
@@ -135,7 +137,7 @@ Object {
             },
           ],
           "SubnetIds": Object {
-            "Ref": "subnetIds",
+            "Ref": "PrivateSubnets",
           },
         },
       },
@@ -170,7 +172,7 @@ Object {
           },
         ],
         "VpcId": Object {
-          "Ref": "vpcId",
+          "Ref": "VpcId",
         },
       },
       "Type": "AWS::EC2::SecurityGroup",

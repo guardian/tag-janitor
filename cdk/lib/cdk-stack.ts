@@ -4,7 +4,7 @@ import { Runtime } from "@aws-cdk/aws-lambda";
 import type { App } from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
-import { GuStack, GuStringParameter, GuSubnetListParameter, GuVpcParameter } from "@guardian/cdk/lib/constructs/core";
+import { GuStack, GuStringParameter } from "@guardian/cdk/lib/constructs/core";
 import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
 import { GuScheduledLambda } from "@guardian/cdk/lib/patterns/scheduled-lambda";
 
@@ -19,12 +19,6 @@ export class CdkStack extends GuStack {
       topic: new GuStringParameter(this, "topicArn", {
         description: "The ARN of the SNS topic to send messages to",
       }),
-      vpc: new GuVpcParameter(this, "vpcId", {
-        description: "The VPC ID for the lambda to live in (this allows it to talk to Prism)",
-      }), // TODO: Look this up in SSM https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-ssm-parameter-types
-      subnets: new GuSubnetListParameter(this, "subnetIds", {
-        description: "The subnet IDs for the lambda to live in (this allows it to talk to Prism)",
-      }), // TODO: Look this up in SSM https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-ssm-parameter-types
       accountsAllowList: new GuStringParameter(this, "accountsAllowList", {
         description: "A comma separated list of account numbers to include",
       }),
@@ -50,9 +44,10 @@ export class CdkStack extends GuStack {
         PRISM_URL: parameters.prismUrl.valueAsString,
       },
       description: "Lambda to notify about instances with missing tags",
-      vpc: GuVpc.fromId(this, "vpc", { vpcId: parameters.vpc.valueAsString }),
+      // This lambda needs access to the Deploy Tools VPC so that it can talk to Prism
+      vpc: GuVpc.fromIdParameter(this, "vpc"),
       vpcSubnets: {
-        subnets: GuVpc.subnets(this, parameters.subnets.valueAsList),
+        subnets: GuVpc.subnetsfromParameter(this),
       },
       schedule: Schedule.rate(lambdaFrequency),
       monitoringConfiguration: { noMonitoring: true },
