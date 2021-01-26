@@ -60,7 +60,7 @@ Object {
                 Object {
                   "Ref": "AWS::AccountId",
                 },
-                ":jacob-testing",
+                ":devx-alerts",
               ],
             ],
           },

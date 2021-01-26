@@ -51,7 +51,7 @@ export class CdkStack extends GuStack {
       },
       schedule: Schedule.rate(lambdaFrequency),
       monitoringConfiguration: {
-        snsTopicName: "jacob-testing",
+        snsTopicName: "devx-alerts",
         toleratedErrorPercentage: 99,
       },
     });
