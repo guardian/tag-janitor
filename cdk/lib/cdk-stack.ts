@@ -50,7 +50,10 @@ export class CdkStack extends GuStack {
         subnets: GuVpc.subnetsfromParameter(this),
       },
       schedule: Schedule.rate(lambdaFrequency),
-      monitoringConfiguration: { noMonitoring: true },
+      monitoringConfiguration: {
+        snsTopicName: "devx-alerts",
+        toleratedErrorPercentage: 99,
+      },
     });
 
     tagJanitorLambda.addToRolePolicy(
