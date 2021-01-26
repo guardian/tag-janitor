@@ -97,7 +97,7 @@ Object {
             ],
           ],
         },
-        "Handler": "dist/handler.handler",
+        "Handler": "dist/src/handler.handler",
         "MemorySize": 512,
         "Role": Object {
           "Fn::GetAtt": Array [
