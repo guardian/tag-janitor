@@ -1,12 +1,14 @@
 import { Schedule } from "@aws-cdk/aws-events";
 import { PolicyStatement } from "@aws-cdk/aws-iam";
-import { Runtime } from "@aws-cdk/aws-lambda";
-import type { App } from "@aws-cdk/core";
+import { InlineCode, Runtime, SingletonFunction } from "@aws-cdk/aws-lambda";
+import { App, CustomResource, CustomResourceProvider } from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
 import { GuStack, GuStringParameter } from "@guardian/cdk/lib/constructs/core";
 import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
 import { GuScheduledLambda } from "@guardian/cdk/lib/patterns/scheduled-lambda";
+import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from "@aws-cdk/custom-resources";
+import { readFileSync } from "fs";
 
 export class CdkStack extends GuStack {
   constructor(scope: App, id: string, props: GuStackProps) {
@@ -51,7 +53,8 @@ export class CdkStack extends GuStack {
       },
       schedule: Schedule.rate(lambdaFrequency),
       monitoringConfiguration: {
-        snsTopicName: "devx-alerts",
+        // snsTopicName: "devx-alerts",
+        snsTopicName: GuSecret(this, "sns-topic"),
         toleratedErrorPercentage: 99,
       },
     });
@@ -63,4 +66,35 @@ export class CdkStack extends GuStack {
       })
     );
   }
+}
+
+function GuSecret(scope: CdkStack, param: string): string {
+  const fullParamPath = `/${scope.stage}/${scope.stack}/${scope.app}/${param}`;
+  // const fullParamPath = `/PROD/deploy/tag-janitor/${param}`;
+  const getParameter = new AwsCustomResource(scope, "GetParameter", {
+    onUpdate: {
+      // will also be called for a CREATE event
+      service: "SSM",
+      action: "getParameter",
+      parameters: { Name: fullParamPath, WithDecryption: false },
+      physicalResourceId: PhysicalResourceId.of(Date.now().toString()), // Update physical id to always fetch the latest version
+    },
+    policy: AwsCustomResourcePolicy.fromSdkCalls({ resources: AwsCustomResourcePolicy.ANY_RESOURCE }),
+  });
+
+  const resource = new CustomResource(scope, "Resource", {
+    serviceToken: "",
+    // provider: CustomResourceProvider.lambda(
+    //   new SingletonFunction(scope, "Singleton", {
+    //     uuid: "f7d4f730-4ee1-11e8-9c2d-fa7ae01bbebc",
+    //     code: new InlineCode(readFileSync("custom-resource-handler.py", { encoding: "utf-8" })),
+    //     handler: "index.main",
+    //     timeout: Duration.seconds(300),
+    //     runtime: Runtime.PYTHON_3_6,
+    //   })
+    // ),
+    // properties: props,
+  });
+
+  return getParameter.getResponseField("Parameter.Value");
 }
