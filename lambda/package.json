@@ -17,7 +17,7 @@
     "@guardian/node-riffraff-artifact": "^0.1.9",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.22",
-    "aws-sdk": "^2.831.0",
+    "aws-sdk": "^2.863.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.18.0",
     "jest": "^26.6.3",
