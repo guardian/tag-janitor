@@ -1,8 +1,24 @@
 import { request } from "https";
 import { parse } from "url";
 import type { CloudFormationCustomResourceEvent, Context } from "aws-lambda";
-import type { Parameter } from "aws-sdk/clients/ssm";
+import AWS from "aws-sdk";
 import type { CustomResourceGetParameterProps } from "./ssmParams";
+
+export function flatten(object: object): Record<string, never> {
+  return Object.assign(
+    {},
+    ...(function _flatten(child: any, path: string[] = []): any {
+      return [].concat(
+        ...Object.keys(child).map((key) => {
+          const childKey = Buffer.isBuffer(child[key]) ? child[key].toString("utf8") : child[key];
+          return typeof childKey === "object" && childKey !== null
+            ? _flatten(childKey, path.concat([key]))
+            : { [path.concat([key]).join(".")]: childKey };
+        })
+      );
+    })(object)
+  );
+}
 
 export async function handler(event: CloudFormationCustomResourceEvent, context: Context) {
   try {
@@ -23,20 +39,18 @@ export async function handler(event: CloudFormationCustomResourceEvent, context:
     }
 
     let data: Record<string, string> = {};
+
     const getParamsProps = event.ResourceProperties.getParamsProps as string | undefined;
-    console.log("getParamsProps", getParamsProps);
 
-    // if (getParamsProps) {
-    //   const request = decodeCall(getParamsProps);
-    const ssmClient = new AWS.SSM();
-    const response = await ssmClient.getParameter(request.apiRequest).promise();
-    //   console.log("Response:", JSON.stringify(response, null, 4));
-    //   data = { response: JSON.stringify(response.Parameter) };
-    // }
+    if (getParamsProps) {
+      const request = decodeCall(getParamsProps);
+      const ssmClient = new AWS.SSM();
+      const response = await ssmClient.getParameter(request.apiRequest).promise();
+      console.log("Response:", JSON.stringify(response, null, 4));
+      data = { ...flatten(response) };
+    }
 
-    const parameter: Parameter = {};
-    data = { response: JSON.stringify(parameter) };
-    // await respond("SUCCESS", "OK", physicalResourceId, data);
+    console.log("data: ", data);
     await respond("SUCCESS", "OK", physicalResourceId, data);
   } catch (e) {
     console.log(e);

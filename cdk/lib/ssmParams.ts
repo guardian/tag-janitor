@@ -7,6 +7,7 @@ import type { Reference } from "@aws-cdk/core";
 import { Construct, CustomResource, Duration } from "@aws-cdk/core";
 import type { GetParameterRequest } from "aws-sdk/clients/ssm";
 import type { CdkStack } from "./cdk-stack";
+import { AwsCustomResourcePolicy } from "@aws-cdk/custom-resources";
 
 export class GuSSMParameter extends Construct implements IGrantable {
   private readonly customResource: CustomResource;
@@ -33,13 +34,14 @@ export class GuSSMParameter extends Construct implements IGrantable {
     const statements: PolicyStatement[] = [
       new PolicyStatement({
         actions: ["ssm:getParameter"],
-        resources: [paramArn], // TODO: Account for stack/stage vs fullPath
+        resources: AwsCustomResourcePolicy.ANY_RESOURCE, // TODO: Account for stack/stage vs fullPath
       }),
     ];
 
     const policy = new Policy(scope, "CustomResourcePolicy", {
       statements: statements,
     });
+
     if (provider.role !== undefined) {
       policy.attachToRole(provider.role);
     }
@@ -71,6 +73,7 @@ export class GuSSMParameter extends Construct implements IGrantable {
   }
 
   public getValue(): string {
+    console.log(this.customResource.toString());
     return this.customResource.getAttString("Parameter.Value");
   }
 }
