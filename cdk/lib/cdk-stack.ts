@@ -10,17 +10,16 @@ export class CdkStack extends GuStack {
 
     const secrets = {
       test: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output"),
-      // test2: new GuSSMParameter(this, "test-output"),
-      // test3: new GuSSMParameter(this, "test-output"),
-      // test4: new GuSSMParameter(this, "test-output"),
-      // test5: new GuSSMParameter(this, "test-output"),
+      test2: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output2"),
+      test3: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output3"),
+      test4: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output4"),
     };
 
     new CfnOutput(this, "output", { value: secrets.test.getValue() });
-    // new CfnOutput(this, "output2", { value: secrets.test2 });
-    // new CfnOutput(this, "output3", { value: secrets.test3 });
-    // new CfnOutput(this, "output4", { value: secrets.test4 });
-    // new CfnOutput(this, "output5", { value: secrets.test5 });
+    new CfnOutput(this, "output2", { value: secrets.test2.getValue() });
+    new CfnOutput(this, "output3", { value: secrets.test3.getValue() });
+    new CfnOutput(this, "output4", { value: secrets.test4.getValue() });
+    new CfnOutput(this, "output5", { value: secrets.test.getValue() });
   }
 }
 

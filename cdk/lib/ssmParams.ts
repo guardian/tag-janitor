@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import type { IGrantable, IPrincipal } from "@aws-cdk/aws-iam";
 import { Policy, PolicyStatement } from "@aws-cdk/aws-iam";
-import { Code, Runtime, RuntimeFamily, SingletonFunction } from "@aws-cdk/aws-lambda";
+import { Code, Runtime, SingletonFunction } from "@aws-cdk/aws-lambda";
 import type { Reference } from "@aws-cdk/core";
 import { Construct, CustomResource, Duration } from "@aws-cdk/core";
 import type { GetParameterRequest } from "aws-sdk/clients/ssm";
@@ -16,7 +16,7 @@ export class GuSSMParameter extends Construct implements IGrantable {
   constructor(scope: CdkStack, param: string, secure: boolean = false) {
     super(scope, `GuSSMParameter${param}`);
     const filePath = join(__dirname, "lambda.js"); //.replace("/lib/", "/dist/lib/");
-    const provider = new SingletonFunction(scope, "Provider", {
+    const provider = new SingletonFunction(scope, `${param}Provider`, {
       code: Code.fromInline(readFileSync(filePath).toString()),
       // runtime: new Runtime("nodejs14.x", RuntimeFamily.NODEJS, { supportsInlineCode: true }),
       runtime: Runtime.NODEJS_12_X,
@@ -38,7 +38,7 @@ export class GuSSMParameter extends Construct implements IGrantable {
       }),
     ];
 
-    const policy = new Policy(scope, "CustomResourcePolicy", {
+    const policy = new Policy(scope, `${param}CustomResourcePolicy`, {
       statements: statements,
     });
 
@@ -53,7 +53,7 @@ export class GuSSMParameter extends Construct implements IGrantable {
       },
     };
 
-    this.customResource = new CustomResource(this, "Resource", {
+    this.customResource = new CustomResource(this, `${param}Resource`, {
       resourceType: "Custom::GuGetSSMParameter",
       serviceToken: provider.functionArn,
       pascalCaseProperties: false,
