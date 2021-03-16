@@ -5,15 +5,20 @@ import { Policy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Code, Runtime, SingletonFunction } from "@aws-cdk/aws-lambda";
 import type { Reference } from "@aws-cdk/core";
 import { Construct, CustomResource, Duration } from "@aws-cdk/core";
+import { AwsCustomResourcePolicy } from "@aws-cdk/custom-resources";
 import type { GetParameterRequest } from "aws-sdk/clients/ssm";
 import type { CdkStack } from "./cdk-stack";
-import { AwsCustomResourcePolicy } from "@aws-cdk/custom-resources";
+
+interface GuSSMParameterProps {
+  secure?: boolean;
+  defaultPath: boolean;
+}
 
 export class GuSSMParameter extends Construct implements IGrantable {
   private readonly customResource: CustomResource;
   readonly grantPrincipal: IPrincipal;
 
-  constructor(scope: CdkStack, param: string, secure: boolean = false) {
+  constructor(scope: CdkStack, param: string, props?: GuSSMParameterProps) {
     super(scope, `GuSSMParameter${param}`);
     const filePath = join(__dirname, "lambda.js"); //.replace("/lib/", "/dist/lib/");
     const provider = new SingletonFunction(scope, `${param}Provider`, {
@@ -28,7 +33,6 @@ export class GuSSMParameter extends Construct implements IGrantable {
 
     this.grantPrincipal = provider.grantPrincipal;
 
-    // const fullParamPath = `/${scope.stage}/${scope.stack}/${scope.app}/${param}`;
     const paramArn = `arn:aws:ssm:${scope.region}:${scope.account}:parameter/${param}`;
 
     const statements: PolicyStatement[] = [
@@ -46,10 +50,12 @@ export class GuSSMParameter extends Construct implements IGrantable {
       policy.attachToRole(provider.role);
     }
 
+    const fullParamPath = `/${scope.stage}/${scope.stack}/${scope.app}/${param}`;
+
     const getParamsProps: CustomResourceGetParameterProps = {
       apiRequest: {
-        Name: param,
-        WithDecryption: secure,
+        Name: props?.defaultPath ? fullParamPath : param,
+        WithDecryption: props?.secure,
       },
     };
 
@@ -80,4 +86,8 @@ export class GuSSMParameter extends Construct implements IGrantable {
 
 export interface CustomResourceGetParameterProps {
   apiRequest: GetParameterRequest;
+}
+
+export function GuSSMParameter2(scope: CdkStack, param: string): string {
+  return new GuSSMParameter(scope, param, { defaultPath: true }).getValue();
 }
