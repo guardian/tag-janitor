@@ -10,12 +10,14 @@
     "test": "jest",
     "format": "prettier --write \"{lib,bin}/**/*.ts\"",
     "cdk": "cdk",
+    "deploy": "yarn build && yarn cdk deploy",
     "lint": "eslint lib/** bin/** --ext .ts --no-error-on-unmatched-pattern"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.86.0",
     "@aws-cdk/custom-resources": "1.86.0",
     "@guardian/eslint-config-typescript": "^0.4.1",
+    "@types/aws-lambda": "^8.10.72",
     "@types/jest": "^26.0.20",
     "@types/node": "10.17.27",
     "@typescript-eslint/eslint-plugin": "^4.14.0",
