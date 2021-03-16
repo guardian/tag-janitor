@@ -22,22 +22,3 @@ export class CdkStack extends GuStack {
     new CfnOutput(this, "output5", { value: secrets.test.getValue() });
   }
 }
-
-// function GuSSMParameterSpike(scope: CdkStack, param: string): string {
-//   const fullParamPath = `/${scope.stage}/${scope.stack}/${scope.app}/${param}`;
-//   // const fullParamPath = `/PROD/deploy/tag-janitor/${param}`;
-//   const getParameter = new AwsCustomResource(scope, `GetParameter-${param}-${Date.now()}`, {
-//     onUpdate: {
-//       // will also be called for a CREATE event
-//       service: "SSM",
-//       action: "getParameter",
-//       parameters: { Name: fullParamPath, WithDecryption: false },
-//       physicalResourceId: PhysicalResourceId.of(Date.now().toString()), // Update physical id to always fetch the latest version
-//     },
-//     policy: AwsCustomResourcePolicy.fromSdkCalls({
-//       resources: [`arn:aws:ssm:${scope.region}:${scope.account}:parameter/${fullParamPath}`],
-//     }),
-//   });
-//
-//   return getParameter.getResponseField("Parameter.Value");
-// }
