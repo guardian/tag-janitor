@@ -1010,17 +1010,17 @@
     "@aws-cdk/aws-s3" "1.86.0"
     "@aws-cdk/core" "1.86.0"
 
-"@guardian/eslint-config-typescript@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-config-typescript/-/eslint-config-typescript-0.4.1.tgz#f983b6b90a4a57e06ce8a9beb52881b7992e877e"
-  integrity sha512-2wzlE27sw+513dgCyN+Mf6/byLOghyqTfy1gmSrGZVXEiU9br+4Q0CwFHBEzR+Bnie2zjK1q/b0DqqI4V8x1PQ==
+"@guardian/eslint-config-typescript@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@guardian/eslint-config-typescript/-/eslint-config-typescript-0.5.0.tgz#362b79da6440fc77d9c25b77ef9cfae18988ac5b"
+  integrity sha512-bCLWYgjNUNzppF+kD2IWmWnvvPSZRMHnNU1Yku9nHqlDOgE8HdEkdfrMc6fWuD/I/HyWW9p5UJweeGfgRSypVw==
   dependencies:
-    "@guardian/eslint-config" "^0.4.0"
+    "@guardian/eslint-config" "^0.5.0"
 
-"@guardian/eslint-config@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-config/-/eslint-config-0.4.0.tgz#1a0a40176f7115849351a3fd0d05028b33e17d42"
-  integrity sha512-B4P84JFTG5JlpgIiOFUPNJ5w9a/VpDfKftWFYaIMdkCRpgDXOhxiZfaBMiP5/D1RsRMSvi2bg3JemS5ueGlOcg==
+"@guardian/eslint-config@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@guardian/eslint-config/-/eslint-config-0.5.0.tgz#ece14ec90b372932c7bf01992fc6d8ce58f7f26e"
+  integrity sha512-THJn0wg7i9YjSVM9ofobsJgS+WH9ybrZH1+0CXLAebp0T53RGtgZUkek82mDg1h3DidsM+f7HSZqoQyrCbPzPw==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
