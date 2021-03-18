@@ -1,10 +1,13 @@
 import { request } from "https";
 import { parse } from "url";
+// eslint-disable-next-line import/no-unresolved -- this should come from @types/aws-lambda, but doesn't for some reason
 import type { CloudFormationCustomResourceEvent, Context } from "aws-lambda";
 import AWS from "aws-sdk";
 import type { CustomResourceGetParameterProps } from "./ssmParams";
 
-export function flatten(object: object): Record<string, never> {
+// Copied over from
+// https://github.com/aws/aws-cdk/blob/95438b56bfdc90e94f969f6998e5b5b680cbd7a8/packages/%40aws-cdk/custom-resources/lib/aws-custom-resource/runtime/index.ts#L16-L29
+export function flatten(object: Record<string, unknown>): Record<string, string> {
   return Object.assign(
     {},
     ...(function _flatten(child: any, path: string[] = []): any {
@@ -17,10 +20,10 @@ export function flatten(object: object): Record<string, never> {
         })
       );
     })(object)
-  );
+  ) as Record<string, string>;
 }
 
-export async function handler(event: CloudFormationCustomResourceEvent, context: Context) {
+export async function handler(event: CloudFormationCustomResourceEvent, context: Context): Promise<void> {
   try {
     console.log(JSON.stringify(event));
 
@@ -47,13 +50,14 @@ export async function handler(event: CloudFormationCustomResourceEvent, context:
       const ssmClient = new AWS.SSM();
       const response = await ssmClient.getParameter(request.apiRequest).promise();
       console.log("Response:", JSON.stringify(response, null, 4));
-      data = { ...flatten(response) };
+      data = { ...flatten((response as unknown) as Record<string, string>) };
     }
 
     console.log("data: ", data);
     await respond("SUCCESS", "OK", physicalResourceId, data);
   } catch (e) {
     console.log(e);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- e.message exists, not sure how to type it explicitly
     await respond("FAILED", e.message || "Internal Error", context.logStreamName, {});
   }
 

@@ -11,18 +11,25 @@ import type { CdkStack } from "./cdk-stack";
 
 interface GuSSMParameterProps {
   secure?: boolean;
+  /*
+   * Assumes the path of `/${STAGE}/${STACK}/${APP}/${param}`
+   * */
   defaultPath: boolean;
 }
+
+const stripped = (str: string) => str.replace(/[-/]/g, "");
 
 export class GuSSMParameter extends Construct implements IGrantable {
   private readonly customResource: CustomResource;
   readonly grantPrincipal: IPrincipal;
 
   constructor(scope: CdkStack, param: string, props?: GuSSMParameterProps) {
-    super(scope, `GuSSMParameter${param}`);
-    const filePath = join(__dirname, "lambda.js"); //.replace("/lib/", "/dist/lib/");
-    const provider = new SingletonFunction(scope, `${param}Provider`, {
-      code: Code.fromInline(readFileSync(filePath).toString()),
+    const id = (id: string) =>
+      param.toUpperCase().includes("TOKEN") ? `${id}-token-${Date.now()}` : `${id}-${stripped(param)}`;
+    super(scope, id("GuSSMParameter"));
+    const lambdaFilePath = join(__dirname, "lambda.js");
+    const provider = new SingletonFunction(scope, id("Provider"), {
+      code: Code.fromInline(readFileSync(lambdaFilePath).toString()),
       // runtime: new Runtime("nodejs14.x", RuntimeFamily.NODEJS, { supportsInlineCode: true }),
       runtime: Runtime.NODEJS_12_X,
       handler: "index.handler",
@@ -33,7 +40,7 @@ export class GuSSMParameter extends Construct implements IGrantable {
 
     this.grantPrincipal = provider.grantPrincipal;
 
-    const paramArn = `arn:aws:ssm:${scope.region}:${scope.account}:parameter/${param}`;
+    const paramArn = `arn:aws:ssm:${scope.region}:${scope.account}:parameter/${param}`; // TODO: Find out actual ARN, because this results in a Access Denied error
 
     const statements: PolicyStatement[] = [
       new PolicyStatement({
@@ -42,7 +49,7 @@ export class GuSSMParameter extends Construct implements IGrantable {
       }),
     ];
 
-    const policy = new Policy(scope, `${param}CustomResourcePolicy`, {
+    const policy = new Policy(scope, id("CustomResourcePolicy"), {
       statements: statements,
     });
 
@@ -51,21 +58,17 @@ export class GuSSMParameter extends Construct implements IGrantable {
     }
 
     const fullParamPath = `/${scope.stage}/${scope.stack}/${scope.app}/${param}`;
+    const fullParamName = props?.defaultPath ? fullParamPath : param;
 
     const getParamsProps: CustomResourceGetParameterProps = {
-      apiRequest: {
-        Name: props?.defaultPath ? fullParamPath : param,
-        WithDecryption: props?.secure,
-      },
+      apiRequest: { Name: fullParamName, WithDecryption: props?.secure },
     };
 
-    this.customResource = new CustomResource(this, `${param}Resource`, {
+    this.customResource = new CustomResource(this, id("Resource"), {
       resourceType: "Custom::GuGetSSMParameter",
       serviceToken: provider.functionArn,
       pascalCaseProperties: false,
-      properties: {
-        getParamsProps: JSON.stringify(getParamsProps),
-      },
+      properties: { getParamsProps: JSON.stringify(getParamsProps) },
     });
 
     // If the policy was deleted first, then the function might lose permissions to delete the custom resource
@@ -88,6 +91,6 @@ export interface CustomResourceGetParameterProps {
   apiRequest: GetParameterRequest;
 }
 
-export function GuSSMParameter2(scope: CdkStack, param: string): string {
-  return new GuSSMParameter(scope, param, { defaultPath: true }).getValue();
+export function GuSSMDefaultParam(scope: CdkStack, param: string): GuSSMParameter {
+  return new GuSSMParameter(scope, param, { defaultPath: true });
 }

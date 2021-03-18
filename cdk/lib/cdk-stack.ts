@@ -2,24 +2,22 @@ import type { App } from "@aws-cdk/core";
 import { CfnOutput } from "@aws-cdk/core";
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
 import { GuStack } from "@guardian/cdk/lib/constructs/core";
-import { GuSSMParameter, GuSSMParameter2 } from "./ssmParams";
+import { GuSSMDefaultParam, GuSSMParameter } from "./ssmParams";
 
 export class CdkStack extends GuStack {
   constructor(scope: App, id: string, props: GuStackProps) {
     super(scope, id, props);
 
     const secrets = {
-      test: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output"),
-      test2: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output2"),
-      test3: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output3"),
-      test4: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output4"),
-      defaultPath: GuSSMParameter2(this, "test-output4"),
+      test1: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output").getValue(),
+      test2: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output2").getValue(),
+      usingDefaultValues: GuSSMDefaultParam(this, "test-output3").getValue(),
+      usingTokensInPath: new GuSSMParameter(this, `/${this.stage}/${this.stack}/${this.app}/test-output4`).getValue(),
     };
 
-    new CfnOutput(this, "output", { value: secrets.test.getValue() });
-    new CfnOutput(this, "output2", { value: secrets.test2.getValue() });
-    new CfnOutput(this, "output3", { value: secrets.test3.getValue() });
-    new CfnOutput(this, "output4", { value: secrets.test4.getValue() });
-    new CfnOutput(this, "defaultPath", { value: secrets.defaultPath });
+    new CfnOutput(this, "output1", { value: secrets.test1 });
+    new CfnOutput(this, "output2", { value: secrets.test2 });
+    new CfnOutput(this, "usingDefaultValues", { value: secrets.usingDefaultValues });
+    new CfnOutput(this, "usingTokensInPath", { value: secrets.usingTokensInPath });
   }
 }
