@@ -9,14 +9,12 @@ export class CdkStack extends GuStack {
     super(scope, id, props);
 
     const secrets = {
-      test1: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output").getValue(),
-      test2: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output2").getValue(),
-      usingDefaultValues: GuSSMDefaultParam(this, "test-output3").getValue(),
-      usingTokensInPath: new GuSSMParameter(this, `/${this.stage}/${this.stack}/${this.app}/test-output4`).getValue(),
+      fullPath: new GuSSMParameter(this, "/CODE/test/tag-janitor/test-output").getValue(),
+      usingDefaultValues: GuSSMDefaultParam(this, "test-output").getValue(),
+      usingTokensInPath: new GuSSMParameter(this, `/${this.stage}/${this.stack}/${this.app}/test-output`).getValue(),
     };
 
-    new CfnOutput(this, "output1", { value: secrets.test1 });
-    new CfnOutput(this, "output2", { value: secrets.test2 });
+    new CfnOutput(this, "fullPath", { value: secrets.fullPath });
     new CfnOutput(this, "usingDefaultValues", { value: secrets.usingDefaultValues });
     new CfnOutput(this, "usingTokensInPath", { value: secrets.usingTokensInPath });
   }
