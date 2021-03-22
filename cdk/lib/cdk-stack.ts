@@ -1,13 +1,13 @@
 import { Schedule } from "@aws-cdk/aws-events";
 import { Duration } from "@aws-cdk/aws-events/node_modules/@aws-cdk/core/lib/duration";
-import { PolicyStatement } from "@aws-cdk/aws-iam";
-import { Runtime } from "@aws-cdk/aws-lambda";
-import type { App } from "@aws-cdk/core";
+import { PolicyStatement } from "@aws-cdk/aws-events/node_modules/@aws-cdk/aws-iam/lib/policy-statement";
+import type { App } from "@aws-cdk/aws-events/node_modules/@aws-cdk/core/lib/app";
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
 import { GuStack, GuStringParameter } from "@guardian/cdk/lib/constructs/core";
 import { GuSSMParameter } from "@guardian/cdk/lib/constructs/core/ssm";
 import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
 import { GuScheduledLambda } from "@guardian/cdk/lib/patterns/scheduled-lambda";
+import { Runtime } from "@guardian/cdk/node_modules/@aws-cdk/aws-lambda/lib";
 
 export class CdkStack extends GuStack {
   constructor(scope: App, id: string, props: GuStackProps) {
