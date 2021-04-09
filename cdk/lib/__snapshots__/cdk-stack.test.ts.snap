@@ -94,11 +94,7 @@ Object {
           "Fn::Join": Array [
             "",
             Array [
-              "High error % from ",
-              Object {
-                "Ref": "tagjanitorlambda3E6E11A1",
-              },
-              " lambda in ",
+              "High error % from tag-janitor-",
               Object {
                 "Ref": "Stage",
               },

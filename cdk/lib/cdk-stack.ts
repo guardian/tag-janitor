@@ -54,6 +54,7 @@ export class CdkStack extends GuStack {
       },
       schedule: Schedule.rate(lambdaFrequency),
       monitoringConfiguration: {
+        alarmName: `High error % from ${app}-${this.stage}`,
         snsTopicName: "devx-alerts",
         toleratedErrorPercentage: 99,
       },
