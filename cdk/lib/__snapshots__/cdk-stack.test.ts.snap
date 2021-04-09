@@ -2,6 +2,16 @@
 
 exports[`The tag-janitor stack matches the snapshot 1`] = `
 Object {
+  "Mappings": Object {
+    "stagemapping": Object {
+      "CODE": Object {
+        "alarmActionsEnabled": false,
+      },
+      "PROD": Object {
+        "alarmActionsEnabled": true,
+      },
+    },
+  },
   "Parameters": Object {
     "BucketName": Object {
       "Description": "BucketName",
@@ -11,11 +21,6 @@ Object {
       "Default": "/account/vpc/primary/subnets/private",
       "Description": "A list of private subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
-    },
-    "Stack": Object {
-      "Default": "deploy",
-      "Description": "Name of this stack",
-      "Type": "String",
     },
     "Stage": Object {
       "AllowedValues": Array [
@@ -45,8 +50,17 @@ Object {
     },
   },
   "Resources": Object {
-    "errorpercentagealarmforscheduledlambdaF6DA7824": Object {
+    "ErrorPercentageAlarmForLambda54F48384": Object {
       "Properties": Object {
+        "ActionsEnabled": Object {
+          "Fn::FindInMap": Array [
+            "stagemapping",
+            Object {
+              "Ref": "Stage",
+            },
+            "alarmActionsEnabled",
+          ],
+        },
         "AlarmActions": Array [
           Object {
             "Fn::Join": Array [
@@ -151,6 +165,7 @@ Object {
           },
         ],
         "Threshold": 99,
+        "TreatMissingData": "notBreaching",
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
@@ -168,10 +183,7 @@ Object {
             "Fn::Join": Array [
               "",
               Array [
-                Object {
-                  "Ref": "Stack",
-                },
-                "/",
+                "deploy/",
                 Object {
                   "Ref": "Stage",
                 },
@@ -223,10 +235,12 @@ Object {
             "Value": "tag-janitor",
           },
           Object {
+            "Key": "gu:cdk:version",
+            "Value": "8.0.1",
+          },
+          Object {
             "Key": "Stack",
-            "Value": Object {
-              "Ref": "Stack",
-            },
+            "Value": "deploy",
           },
           Object {
             "Key": "Stage",
@@ -268,10 +282,12 @@ Object {
             "Value": "tag-janitor",
           },
           Object {
+            "Key": "gu:cdk:version",
+            "Value": "8.0.1",
+          },
+          Object {
             "Key": "Stack",
-            "Value": Object {
-              "Ref": "Stack",
-            },
+            "Value": "deploy",
           },
           Object {
             "Key": "Stage",
@@ -332,10 +348,12 @@ Object {
             "Value": "tag-janitor",
           },
           Object {
+            "Key": "gu:cdk:version",
+            "Value": "8.0.1",
+          },
+          Object {
             "Key": "Stack",
-            "Value": Object {
-              "Ref": "Stack",
-            },
+            "Value": "deploy",
           },
           Object {
             "Key": "Stage",
@@ -411,7 +429,7 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
-    "tagjanitorlambdatagjanitorlambdarate7days0AllowEventRuletagjanitortagjanitorlambdatagjanitorlambdarate7days03288E20D8CA3ECD4": Object {
+    "tagjanitorlambdatagjanitorlambdarate7days0AllowEventRuletagjanitortagjanitorlambdaBA439B3DF4A71923": Object {
       "Properties": Object {
         "Action": "lambda:InvokeFunction",
         "FunctionName": Object {
