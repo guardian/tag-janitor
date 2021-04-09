@@ -12,6 +12,8 @@ export class CdkStack extends GuStack {
   constructor(scope: App, id: string, props: GuStackProps) {
     super(scope, id, props);
 
+    const app = "tag-janitor";
+
     const parameters = {
       bucketName: new GuStringParameter(this, "BucketName", {
         description: "BucketName",
@@ -29,13 +31,14 @@ export class CdkStack extends GuStack {
 
     const lambdaFrequency = Duration.days(7);
 
-    const tagJanitorLambda = new GuScheduledLambda(this, `${this.app}-lambda`, {
+    const tagJanitorLambda = new GuScheduledLambda(this, `${app}-lambda`, {
+      app: app,
       handler: "dist/src/handler.handler",
-      functionName: `${this.app}-${this.stage}`,
+      functionName: `${app}-${this.stage}`,
       runtime: Runtime.NODEJS_12_X,
       code: {
         bucket: parameters.bucketName.valueAsString,
-        key: `${this.stack}/${this.stage}/${this.app}/${this.app}.zip`,
+        key: `${this.stack}/${this.stage}/${app}/${app}.zip`,
       },
       environment: {
         STAGE: this.stage,
@@ -51,6 +54,7 @@ export class CdkStack extends GuStack {
       },
       schedule: Schedule.rate(lambdaFrequency),
       monitoringConfiguration: {
+        alarmName: `High error % from ${app}-${this.stage}`,
         snsTopicName: "devx-alerts",
         toleratedErrorPercentage: 99,
       },
