@@ -233,7 +233,7 @@ Object {
           },
           Object {
             "Key": "gu:cdk:version",
-            "Value": "12.0.0",
+            "Value": "TEST",
           },
           Object {
             "Key": "Stack",
@@ -280,7 +280,7 @@ Object {
           },
           Object {
             "Key": "gu:cdk:version",
-            "Value": "12.0.0",
+            "Value": "TEST",
           },
           Object {
             "Key": "Stack",
@@ -346,7 +346,7 @@ Object {
           },
           Object {
             "Key": "gu:cdk:version",
-            "Value": "12.0.0",
+            "Value": "TEST",
           },
           Object {
             "Key": "Stack",
