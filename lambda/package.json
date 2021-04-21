@@ -14,7 +14,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@guardian/node-riffraff-artifact": "^0.1.9",
+    "@guardian/node-riffraff-artifact": "^0.2.0",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.22",
     "aws-sdk": "^2.889.0",
