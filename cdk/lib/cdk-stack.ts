@@ -15,9 +15,6 @@ export class CdkStack extends GuStack {
     const app = "tag-janitor";
 
     const parameters = {
-      bucketName: new GuStringParameter(this, "BucketName", {
-        description: "BucketName",
-      }),
       topic: new GuStringParameter(this, "topicArn", {
         description: "The ARN of the SNS topic to send messages to",
       }),
@@ -36,10 +33,7 @@ export class CdkStack extends GuStack {
       handler: "dist/src/handler.handler",
       functionName: `${app}-${this.stage}`,
       runtime: Runtime.NODEJS_12_X,
-      code: {
-        bucket: parameters.bucketName.valueAsString,
-        key: `${this.stack}/${this.stage}/${app}/${app}.zip`,
-      },
+      fileName: `${app}.zip`,
       environment: {
         STAGE: this.stage,
         TOPIC_ARN: parameters.topic.valueAsString,
@@ -52,7 +46,7 @@ export class CdkStack extends GuStack {
       vpcSubnets: {
         subnets: GuVpc.subnetsfromParameter(this),
       },
-      schedule: Schedule.rate(lambdaFrequency),
+      rules: [{ schedule: Schedule.rate(lambdaFrequency) }],
       monitoringConfiguration: {
         alarmName: `High error % from ${app}-${this.stage}`,
         snsTopicName: "devx-alerts",
