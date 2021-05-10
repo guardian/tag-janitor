@@ -1070,10 +1070,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@guardian/cdk@12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-12.0.0.tgz#0ad7b8b21455c13cf3fa7c013c075eca57ac5318"
-  integrity sha512-0nCNBtHq9yZ3D+9b6D43imRtP/JSErgRYWbzBjdoDyrYAVdHRtsmhqi1ubsagULwiB0hN02cSIf6WJ2TX3/CYA==
+"@guardian/cdk@14.4.0":
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-14.4.0.tgz#c746785f4d45db4c4c3969999d7200f43b68473a"
+  integrity sha512-ydwWspuypG7qXyjzRoBWEvI4y2iBLgOs0DtNCI0/lqGx2uvPd+RUaOcZDSat81TSlJSzaeCorXILmULE6wz6Zg==
   dependencies:
     "@aws-cdk/assert" "1.98.0"
     "@aws-cdk/aws-apigateway" "1.98.0"
@@ -1090,7 +1090,7 @@
     "@aws-cdk/aws-rds" "1.98.0"
     "@aws-cdk/aws-s3" "1.98.0"
     "@aws-cdk/core" "1.98.0"
-    aws-sdk "^2.888.0"
+    aws-sdk "^2.900.0"
     read-pkg-up "7.0.1"
 
 "@guardian/eslint-config-typescript@^0.5.0":
@@ -1777,25 +1777,10 @@ aws-cdk@1.98.0:
     yaml "1.10.2"
     yargs "^16.2.0"
 
-aws-sdk@^2.848.0:
-  version "2.883.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.883.0.tgz#b040b21e81e2ced5f7e0830ea0b58b8a3ca6a083"
-  integrity sha512-S+SS4h0P5gQchIpbJfaVlAvbZGBeFO1nzj9as/phbcLKRqxJyzaDT/Qx1xrT/hORUd+rY4njkuyapeIIzmnVKA==
-  dependencies:
-    buffer "4.9.2"
-    events "1.1.1"
-    ieee754 "1.1.13"
-    jmespath "0.15.0"
-    querystring "0.2.0"
-    sax "1.2.1"
-    url "0.10.3"
-    uuid "3.3.2"
-    xml2js "0.4.19"
-
-aws-sdk@^2.888.0:
-  version "2.889.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.889.0.tgz#513457f488305a8ff5593747741b67e7b874bdf7"
-  integrity sha512-+v77GmIJKXT3GMDg/HF9x8c7RSVU8Imfp/0n0Tuzf5AAE6eavpD3xzHABiK9zO9f+T8XzJDytl66UQ33YXavng==
+aws-sdk@^2.848.0, aws-sdk@^2.900.0:
+  version "2.903.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.903.0.tgz#4c8252723370ebbdaffe69f4dfddc5973b1dab4a"
+  integrity sha512-BP/giYLP8QJ63Jta59kph1F76oPITxRt/wNr3BdoEs9BtshWlGKk149UaseDB4wJtI+0TER5jtzBIUBcP6E+wA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
