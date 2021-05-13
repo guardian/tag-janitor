@@ -14,3 +14,8 @@ updates:
     directory: '/cdk'
     schedule:
       interval: 'weekly'
+    # The version of @aws-cdk/* libraries must match those from @guardian/cdk.
+    # We'd never be able to update them here independently, so just ignore them.
+    ignore:
+      - dependency-name: "aws-cdk"
+      - dependency-name: "@aws-cdk/*"
