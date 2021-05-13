@@ -6,14 +6,21 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+
   - package-ecosystem: 'npm'
     directory: '/lambda'
+
+    # This repository does not run in a context that is accessible by users or external requests. Run Dependabot once a month to reduce the frequency of PRs.
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
+
   - package-ecosystem: 'npm'
     directory: '/cdk'
+
+    # This repository does not run in a context that is accessible by users or external requests. Run Dependabot once a month to reduce the frequency of PRs.
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
+
     # The version of @aws-cdk/* libraries must match those from @guardian/cdk.
     # We'd never be able to update them here independently, so just ignore them.
     ignore:
