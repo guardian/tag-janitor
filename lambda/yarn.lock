@@ -299,15 +299,15 @@
   resolved "https://registry.yarnpkg.com/@guardian/anghammarad/-/anghammarad-1.0.2.tgz#f2a71310ff990d8cc234819f616195c7b126c272"
   integrity sha512-BLmCBFrj0iSzAQdpr2Ha+T3j/RmO9vnAjUy6FlqYtQ1Y14TUmmxXJC5qT1Ao49lIcG8rLbkgg0LSA4Q17T3mPw==
 
-"@guardian/node-riffraff-artifact@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@guardian/node-riffraff-artifact/-/node-riffraff-artifact-0.2.0.tgz#08ad8bf995592f2aea2aabc69417db9aa0e562ea"
-  integrity sha512-ZxrmKrhnm69X5MFhfOlv2id1fyPybLIfCSkmcnRpeWDQlSh6iVRTqiO45ilDsQXSk1rS/FyizlRMZVQ9XbKzyg==
+"@guardian/node-riffraff-artifact@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@guardian/node-riffraff-artifact/-/node-riffraff-artifact-0.2.1.tgz#e7f7d30f018273b6b384bc68477d0868f4ea3058"
+  integrity sha512-sNFaXo068Tla/7SpoaAvJLg63Z8JOi1ubUkLsl0ZoDm90/BRw2Qd8hnhl2iXbgVV4Fe3y12ymEHr9+rLgBGm4w==
   dependencies:
     "@mojotech/json-type-validation" "^3.1.0"
     "@types/temp" "^0.8.34"
     archiver "^3.1.1"
-    aws-sdk "^2.610.0"
+    aws-sdk "2.893.0"
     ora "^4.0.3"
     temp "^0.9.1"
     yaml "^1.7.2"
@@ -822,10 +822,10 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-aws-sdk@^2.610.0, aws-sdk@^2.892.0:
-  version "2.892.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.892.0.tgz#adec48f52f4b6f5c576dcbfac020bcec1eed3a25"
-  integrity sha512-OOXJ15AnJJMHZYXJQVy22Wjnp5GrZCfvCxmoZuXdsLNs8M+BL4mfBqma82+UkM2NhJgLYuAhDfvFUBob6VGIWw==
+aws-sdk@2.893.0, aws-sdk@^2.892.0:
+  version "2.893.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.893.0.tgz#953116eeef20ed7ced1ee081ec249af6644ccf44"
+  integrity sha512-yebi0KfJSyYcaYF+sDJ6Wq7OLq/8VZZiP7mN3fYfE3XZQV9MUYHMITqyeVxKG8BMvzkYfr6gpx1XZOJAYzfvJQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
