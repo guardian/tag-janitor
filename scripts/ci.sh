@@ -7,7 +7,7 @@ ROOT_DIR="${DIR}/.."
 
 pushd "${ROOT_DIR}/lambda"
 echo "##teamcity[blockOpened name='npm']"
-yarn
+yarn --frozen-lockfile
 echo "##teamcity[blockClosed name='npm']"
 
 echo "##teamcity[testSuiteStarted name='lint']"
