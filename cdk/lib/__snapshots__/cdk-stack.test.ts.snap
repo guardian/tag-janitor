@@ -135,7 +135,7 @@ Object {
                 "MetricName": "Errors",
                 "Namespace": "AWS/Lambda",
               },
-              "Period": 300,
+              "Period": 60,
               "Stat": "Sum",
             },
             "ReturnData": false,
@@ -155,7 +155,7 @@ Object {
                 "MetricName": "Invocations",
                 "Namespace": "AWS/Lambda",
               },
-              "Period": 300,
+              "Period": 60,
               "Stat": "Sum",
             },
             "ReturnData": false,
@@ -236,6 +236,10 @@ Object {
             "Value": "TEST",
           },
           Object {
+            "Key": "gu:repo",
+            "Value": "guardian/tag-janitor",
+          },
+          Object {
             "Key": "Stack",
             "Value": "deploy",
           },
@@ -281,6 +285,10 @@ Object {
           Object {
             "Key": "gu:cdk:version",
             "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/tag-janitor",
           },
           Object {
             "Key": "Stack",
@@ -347,6 +355,10 @@ Object {
           Object {
             "Key": "gu:cdk:version",
             "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/tag-janitor",
           },
           Object {
             "Key": "Stack",
