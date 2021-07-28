@@ -44,7 +44,7 @@ export class CdkStack extends GuStack {
       // This lambda needs access to the Deploy Tools VPC so that it can talk to Prism
       vpc: GuVpc.fromIdParameter(this, "vpc"),
       vpcSubnets: {
-        subnets: GuVpc.subnetsfromParameter(this),
+        subnets: GuVpc.subnetsFromParameter(this),
       },
       rules: [{ schedule: Schedule.rate(lambdaFrequency) }],
       monitoringConfiguration: {
