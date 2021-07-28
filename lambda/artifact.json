@@ -4,12 +4,12 @@
   "actions": [
     {
       "action": "tag-janitor",
-      "path": "./lambda",
+      "path": "./",
       "compress": "zip"
     },
     {
       "action": "cloudformation",
-      "path": "cloudformation/cdk/CdkStack.template.json",
+      "path": "../cloudformation/cdk/CdkStack.template.json",
       "compress": false
     }
   ]
