@@ -195,9 +195,11 @@ Object {
             "ACCOUNTS_ALLOW_LIST": Object {
               "Ref": "accountsAllowList",
             },
+            "APP": "tag-janitor",
             "PRISM_URL": Object {
               "Ref": "prismUrl",
             },
+            "STACK": "deploy",
             "STAGE": Object {
               "Ref": "Stage",
             },
@@ -418,6 +420,30 @@ Object {
                   ],
                 },
               ],
+            },
+            Object {
+              "Action": "ssm:GetParametersByPath",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:aws:ssm:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":parameter/",
+                    Object {
+                      "Ref": "Stage",
+                    },
+                    "/deploy/tag-janitor",
+                  ],
+                ],
+              },
             },
             Object {
               "Action": "SNS:Publish",
