@@ -2,32 +2,30 @@
 
 set -e
 
+if [[ ! -z "${TEAMCITY_VERSION}" ]]; then
+  echo "Running in TeamCity. Nope!"
+  exit 0
+fi
+
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 ROOT_DIR="${DIR}/.."
 
-echo "##teamcity[blockOpened name='generate-cfn']"
-"${ROOT_DIR}/scripts/generate-cfn.sh"
-echo "##teamcity[blockClosed name='generate-cfn']"
+CDK_OUTPUT_DIR="${ROOT_DIR}/cloudformation/cdk"
 
-pushd "${ROOT_DIR}/lambda"
-echo "##teamcity[blockOpened name='npm']"
-yarn --frozen-lockfile
-echo "##teamcity[blockClosed name='npm']"
 
-echo "##teamcity[testSuiteStarted name='lint']"
-yarn lint
-echo "##teamcity[testSuiteFinished name='lint']"
+(
+  cd "${ROOT_DIR}/cdk"
+   yarn --frozen-lockfile
+   yarn lint
+   yarn test
+   yarn cdk synth -o "${CDK_OUTPUT_DIR}"
+)
 
-echo "##teamcity[testSuiteStarted name='test']"
-yarn test
-echo "##teamcity[testSuiteFinished name='test']"
-
-echo "##teamcity[testSuiteStarted name='compile']"
-yarn compile
-echo "##teamcity[testSuiteFinished name='compile']"
-
-echo "##teamcity[compilationStarted compiler='riffraff']"
-yarn riffraff
-echo "##teamcity[compilationFinished compiler='riffraff']"
-
-popd
+(
+  cd "${ROOT_DIR}/lambda"
+  yarn --frozen-lockfile
+  yarn lint
+  yarn test
+  yarn compile
+  yarn riffraff
+)
