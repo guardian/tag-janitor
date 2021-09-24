@@ -46,5 +46,3 @@ $ yarn test
 == How to deploy
 
 Deploy this app through TeamCity and RiffRaff. See what CI is doing in `scripts/ci.sh`
-
-To generate the Cloudformation to create a stack, you can run `scripts/generate-cfn.sh`
