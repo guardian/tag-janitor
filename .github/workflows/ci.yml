@@ -6,7 +6,7 @@ on:
     branches:
       - main
 jobs:
-  cdk-test:
+  CI:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
