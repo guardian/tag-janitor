@@ -6,11 +6,6 @@
       "action": "tag-janitor",
       "path": "./",
       "compress": "zip"
-    },
-    {
-      "action": "cloudformation",
-      "path": "../cloudformation/cdk/CdkStack.template.json",
-      "compress": false
     }
   ]
 }
