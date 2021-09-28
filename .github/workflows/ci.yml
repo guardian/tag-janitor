@@ -20,7 +20,7 @@ jobs:
         with:
           awsRoleToAssume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: ${{ matrix.node-version }}
       - run: ./scripts/ci.sh
