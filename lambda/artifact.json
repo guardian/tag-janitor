@@ -1,5 +1,5 @@
 {
-  "projectName": "Deploy Tools::Tag Janitor",
+  "projectName": "devx::Tag Janitor",
   "vcsURL": "https://github.com/guardian/tag-janitor",
   "actions": [
     {
