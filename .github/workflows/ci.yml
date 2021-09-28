@@ -11,16 +11,15 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    strategy:
-      matrix:
-        node-version: [14.15.1]
     steps:
       - uses: actions/checkout@v2
       - uses: guardian/actions-assume-aws-role@v1.0.0
         with:
           awsRoleToAssume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2.4.0
+      - uses: guardian/actions-setup-node@v2.4.1
         with:
-          node-version: ${{ matrix.node-version }}
+          cache: yarn
+          cache-dependency-path: |
+            cdk/yarn.lock
+            lambda/yarn.lock
       - run: ./scripts/ci.sh
