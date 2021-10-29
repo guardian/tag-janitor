@@ -19,6 +19,10 @@ jobs:
       - uses: guardian/actions-assume-aws-role@v1.0.0
         with:
           awsRoleToAssume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+      - uses: guardian/cdk@aa-composite-action
+        with:
+          packageManager: yarn
+          lockfile: cdk/yarn.lock
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.4.0
         with:
