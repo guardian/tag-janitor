@@ -1,6 +1,6 @@
 import { Schedule } from "@aws-cdk/aws-events";
 import { PolicyStatement } from "@aws-cdk/aws-iam";
-import { Runtime } from "@aws-cdk/aws-lambda";
+import { Runtime, RuntimeFamily } from "@aws-cdk/aws-lambda";
 import type { App } from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
@@ -28,11 +28,17 @@ export class CdkStack extends GuStack {
 
     const lambdaFrequency = Duration.days(7);
 
+    // This is copied from the aws-cdk codebase
+    // TODO use the enum once updated version of @guardian/cdk
+    const node16 = new Runtime("nodejs16.x", RuntimeFamily.NODEJS, {
+      supportsInlineCode: true,
+    });
+
     const tagJanitorLambda = new GuScheduledLambda(this, `${app}-lambda`, {
       app: app,
       handler: "dist/src/handler.handler",
       functionName: `${app}-${this.stage}`,
-      runtime: Runtime.NODEJS_12_X,
+      runtime: node16,
       fileName: `${app}.zip`,
       environment: {
         STAGE: this.stage,
