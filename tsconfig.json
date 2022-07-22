@@ -24,6 +24,7 @@
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
+    "noUncheckedIndexedAccess": true,
     "typeRoots": ["./node_modules/@types"],
     "rootDir": "./",
     "outDir": "dist"
