@@ -6,14 +6,16 @@
   "scripts": {
     "test": "jest",
     "start": "ts-node src/handler.ts",
-    "compile": "tsc"
+    "compile": "tsc -noEmit",
+    "build": "esbuild src/handler.ts --bundle --minify --outfile=dist/index.js --external:aws-sdk --platform=node"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "aws-sdk": "^2.983.0"
+    "aws-sdk": "^2.983.0",
+    "esbuild": "^0.14.49"
   },
   "dependencies": {
     "@guardian/anghammarad": "^1.0.2",

@@ -219,7 +219,7 @@ Object {
             ],
           ],
         },
-        "Handler": "src/handler.handler",
+        "Handler": "index.handler",
         "MemorySize": 512,
         "Role": Object {
           "Fn::GetAtt": Array [

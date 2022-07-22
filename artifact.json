@@ -4,7 +4,7 @@
   "actions": [
     {
       "action": "tag-janitor",
-      "path": "dist/packages/lambda/src",
+      "path": "packages/lambda/dist",
       "compress": "zip"
     },
     {

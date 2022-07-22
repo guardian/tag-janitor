@@ -36,7 +36,7 @@ export class CdkStack extends GuStack {
 
 		const tagJanitorLambda = new GuScheduledLambda(this, `${app}-lambda`, {
 			app: app,
-			handler: 'src/handler.handler',
+			handler: 'index.handler',
 			functionName: `${app}-${this.stage}`,
 			runtime: node16,
 			fileName: `${app}.zip`,
