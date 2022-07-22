@@ -25,7 +25,7 @@ function createNotifyParams({
   accountName: string;
   message: string;
   accountNumber: string;
-  topicArn;
+  topicArn: string;
 }) {
   return {
     subject: `AWS account ${accountName} has instances with missing tags`,

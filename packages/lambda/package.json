@@ -1,0 +1,23 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "start": "ts-node src/handler.ts",
+    "compile": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "aws-sdk": "^2.983.0",
+    "dotenv": "^10.0.0"
+  },
+  "dependencies": {
+    "@guardian/anghammarad": "^1.0.2",
+    "axios": "^0.21.2"
+  }
+}

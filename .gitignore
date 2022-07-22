@@ -1,13 +1,13 @@
 .idea
+node_modules
 
-# Lambda
-node_modules/
-yarn-error.log
+# Configuration
 .env
-package-lock.json
+
+# Ignore yarn things as using NPM
+yarn-error.log
+yarn.lock
+
+# Compiled artifacts
 dist
-
-# CDK
-cloudformation/cdk
 cdk.out
-
