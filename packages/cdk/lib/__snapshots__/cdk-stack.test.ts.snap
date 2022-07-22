@@ -2,16 +2,6 @@
 
 exports[`The tag-janitor stack matches the snapshot 1`] = `
 Object {
-  "Mappings": Object {
-    "stagemapping": Object {
-      "CODE": Object {
-        "alarmActionsEnabled": false,
-      },
-      "PROD": Object {
-        "alarmActionsEnabled": true,
-      },
-    },
-  },
   "Parameters": Object {
     "DistributionBucketName": Object {
       "Default": "/account/services/artifact.bucket",
@@ -23,18 +13,9 @@ Object {
       "Description": "A list of private subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
-    "Stage": Object {
-      "AllowedValues": Array [
-        "CODE",
-        "PROD",
-      ],
-      "Default": "CODE",
-      "Description": "Stage name",
-      "Type": "String",
-    },
     "VpcId": Object {
       "Default": "/account/vpc/primary/id",
-      "Description": "Virtual Private Cloud to run EC2 instances within",
+      "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
       "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
     },
     "accountsAllowList": Object {
@@ -51,17 +32,87 @@ Object {
     },
   },
   "Resources": Object {
-    "ErrorPercentageAlarmForLambda54F48384": Object {
+    "tagjanitorlambda3E6E11A1": Object {
+      "DependsOn": Array [
+        "tagjanitorlambdaServiceRoleDefaultPolicy79766902",
+        "tagjanitorlambdaServiceRoleD63E9AA7",
+      ],
       "Properties": Object {
-        "ActionsEnabled": Object {
-          "Fn::FindInMap": Array [
-            "stagemapping",
-            Object {
-              "Ref": "Stage",
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "DistributionBucketName",
+          },
+          "S3Key": "deploy/PROD/tag-janitor/tag-janitor.zip",
+        },
+        "Description": "Lambda to notify about instances with missing tags",
+        "Environment": Object {
+          "Variables": Object {
+            "ACCOUNTS_ALLOW_LIST": Object {
+              "Ref": "accountsAllowList",
             },
-            "alarmActionsEnabled",
+            "APP": "tag-janitor",
+            "PRISM_URL": Object {
+              "Ref": "prismUrl",
+            },
+            "STACK": "deploy",
+            "STAGE": "PROD",
+            "TOPIC_ARN": Object {
+              "Ref": "topicArn",
+            },
+          },
+        },
+        "FunctionName": "tag-janitor-PROD",
+        "Handler": "index.handler",
+        "MemorySize": 512,
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "tagjanitorlambdaServiceRoleD63E9AA7",
+            "Arn",
           ],
         },
+        "Runtime": "nodejs16.x",
+        "Tags": Array [
+          Object {
+            "Key": "App",
+            "Value": "tag-janitor",
+          },
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/tag-janitor",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "deploy",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
+        "Timeout": 30,
+        "VpcConfig": Object {
+          "SecurityGroupIds": Array [
+            Object {
+              "Fn::GetAtt": Array [
+                "tagjanitorlambdaSecurityGroupCDEEB485",
+                "GroupId",
+              ],
+            },
+          ],
+          "SubnetIds": Object {
+            "Ref": "PrivateSubnets",
+          },
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "tagjanitorlambdaErrorPercentageAlarmForLambda028453C9": Object {
+      "Properties": Object {
+        "ActionsEnabled": true,
         "AlarmActions": Array [
           Object {
             "Fn::Join": Array [
@@ -91,17 +142,7 @@ Object {
             ],
           ],
         },
-        "AlarmName": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "High error % from tag-janitor-",
-              Object {
-                "Ref": "Stage",
-              },
-            ],
-          ],
-        },
+        "AlarmName": "High error % from tag-janitor-PROD",
         "ComparisonOperator": "GreaterThanThreshold",
         "EvaluationPeriods": 1,
         "Metrics": Array [
@@ -166,109 +207,6 @@ Object {
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
-    "tagjanitorlambda3E6E11A1": Object {
-      "DependsOn": Array [
-        "tagjanitorlambdaServiceRoleDefaultPolicy79766902",
-        "tagjanitorlambdaServiceRoleD63E9AA7",
-      ],
-      "Properties": Object {
-        "Code": Object {
-          "S3Bucket": Object {
-            "Ref": "DistributionBucketName",
-          },
-          "S3Key": Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                "deploy/",
-                Object {
-                  "Ref": "Stage",
-                },
-                "/tag-janitor/tag-janitor.zip",
-              ],
-            ],
-          },
-        },
-        "Description": "Lambda to notify about instances with missing tags",
-        "Environment": Object {
-          "Variables": Object {
-            "ACCOUNTS_ALLOW_LIST": Object {
-              "Ref": "accountsAllowList",
-            },
-            "APP": "tag-janitor",
-            "PRISM_URL": Object {
-              "Ref": "prismUrl",
-            },
-            "STACK": "deploy",
-            "STAGE": Object {
-              "Ref": "Stage",
-            },
-            "TOPIC_ARN": Object {
-              "Ref": "topicArn",
-            },
-          },
-        },
-        "FunctionName": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "tag-janitor-",
-              Object {
-                "Ref": "Stage",
-              },
-            ],
-          ],
-        },
-        "Handler": "index.handler",
-        "MemorySize": 512,
-        "Role": Object {
-          "Fn::GetAtt": Array [
-            "tagjanitorlambdaServiceRoleD63E9AA7",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs16.x",
-        "Tags": Array [
-          Object {
-            "Key": "App",
-            "Value": "tag-janitor",
-          },
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/tag-janitor",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "deploy",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": Object {
-              "Ref": "Stage",
-            },
-          },
-        ],
-        "Timeout": 30,
-        "VpcConfig": Object {
-          "SecurityGroupIds": Array [
-            Object {
-              "Fn::GetAtt": Array [
-                "tagjanitorlambdaSecurityGroupCDEEB485",
-                "GroupId",
-              ],
-            },
-          ],
-          "SubnetIds": Object {
-            "Ref": "PrivateSubnets",
-          },
-        },
-      },
-      "Type": "AWS::Lambda::Function",
-    },
     "tagjanitorlambdaSecurityGroupCDEEB485": Object {
       "Properties": Object {
         "GroupDescription": "Automatic security group for Lambda Function tagjanitortagjanitorlambdaBA439B3D",
@@ -298,9 +236,7 @@ Object {
           },
           Object {
             "Key": "Stage",
-            "Value": Object {
-              "Ref": "Stage",
-            },
+            "Value": "PROD",
           },
         ],
         "VpcId": Object {
@@ -368,9 +304,7 @@ Object {
           },
           Object {
             "Key": "Stage",
-            "Value": Object {
-              "Ref": "Stage",
-            },
+            "Value": "PROD",
           },
         ],
       },
@@ -436,11 +370,30 @@ Object {
                     Object {
                       "Ref": "AWS::AccountId",
                     },
-                    ":parameter/",
+                    ":parameter/PROD/deploy/tag-janitor",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "ssm:GetParameters",
+                "ssm:GetParameter",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:aws:ssm:",
                     Object {
-                      "Ref": "Stage",
+                      "Ref": "AWS::Region",
                     },
-                    "/deploy/tag-janitor",
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":parameter/PROD/deploy/tag-janitor/*",
                   ],
                 ],
               },
