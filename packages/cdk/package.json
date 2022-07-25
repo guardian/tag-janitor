@@ -9,15 +9,10 @@
     "diff": "cdk diff --path-metadata false --version-reporting false"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.120.0",
-    "@aws-cdk/aws-ec2": "1.120.0",
-    "@aws-cdk/aws-events-targets": "1.120.0",
-    "@aws-cdk/aws-iam": "1.120.0",
-    "@aws-cdk/aws-lambda": "1.120.0",
-    "@aws-cdk/aws-s3": "1.120.0",
-    "@aws-cdk/core": "1.120.0",
-    "@guardian/cdk": "24.0.0",
-    "aws-cdk": "1.120.0",
-    "source-map-support": "^0.5.16"
+    "@guardian/cdk": "47.0.0",
+    "aws-cdk": "2.32.1",
+    "aws-cdk-lib": "2.32.1",
+    "constructs": "10.1.50",
+    "source-map-support": "^0.5.21"
   }
 }

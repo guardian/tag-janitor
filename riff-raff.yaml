@@ -1,5 +1,6 @@
 regions: [eu-west-1]
 stacks: [deploy]
+allowedStages: [PROD]
 deployments:
   tag-janitor:
     type: aws-lambda

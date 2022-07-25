@@ -1,12 +1,12 @@
-import { Schedule } from '@aws-cdk/aws-events';
-import { PolicyStatement } from '@aws-cdk/aws-iam';
-import { Runtime, RuntimeFamily } from '@aws-cdk/aws-lambda';
-import type { App } from '@aws-cdk/core';
-import { Duration } from '@aws-cdk/core';
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack, GuStringParameter } from '@guardian/cdk/lib/constructs/core';
 import { GuVpc } from '@guardian/cdk/lib/constructs/ec2';
 import { GuScheduledLambda } from '@guardian/cdk/lib/patterns/scheduled-lambda';
+import { Duration } from 'aws-cdk-lib';
+import type { App } from 'aws-cdk-lib';
+import { Schedule } from 'aws-cdk-lib/aws-events';
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 
 export class CdkStack extends GuStack {
 	constructor(scope: App, id: string, props: GuStackProps) {
@@ -28,20 +28,13 @@ export class CdkStack extends GuStack {
 
 		const lambdaFrequency = Duration.days(7);
 
-		// This is copied from the aws-cdk codebase
-		// TODO use the enum once updated version of @guardian/cdk
-		const node16 = new Runtime('nodejs16.x', RuntimeFamily.NODEJS, {
-			supportsInlineCode: true,
-		});
-
 		const tagJanitorLambda = new GuScheduledLambda(this, `${app}-lambda`, {
 			app: app,
 			handler: 'index.handler',
 			functionName: `${app}-${this.stage}`,
-			runtime: node16,
+			runtime: Runtime.NODEJS_16_X,
 			fileName: `${app}.zip`,
 			environment: {
-				STAGE: this.stage,
 				TOPIC_ARN: parameters.topic.valueAsString,
 				ACCOUNTS_ALLOW_LIST: parameters.accountsAllowList.valueAsString,
 				PRISM_URL: parameters.prismUrl.valueAsString,
