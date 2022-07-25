@@ -219,7 +219,7 @@ Object {
             ],
           ],
         },
-        "Handler": "dist/src/handler.handler",
+        "Handler": "index.handler",
         "MemorySize": 512,
         "Role": Object {
           "Fn::GetAtt": Array [
@@ -227,7 +227,7 @@ Object {
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": Array [
           Object {
             "Key": "App",
